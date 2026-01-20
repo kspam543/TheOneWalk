@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>The One Walk - Journey to Mount Doom</title>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: Georgia, serif;
@@ -22,31 +19,25 @@
     /* Map Container */
     #map-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       overflow: hidden;
       background: #1a0f08;
       cursor: grab;
     }
+    #map-container.grabbing { cursor: grabbing; }
 
-    #map-container.grabbing {
-      cursor: grabbing;
-    }
-
-    /* EDIT: wrapper must size to the image and be the positioning reference for the SVG overlay */
+    /* Wrapper must size to the image and be reference for overlay */
     #map-wrapper {
-      position: relative;      /* was: absolute */
-      display: inline-block;   /* ensures wrapper has real width/height based on image */
+      position: relative;
+      display: inline-block;
       transform-origin: 0 0;
       transition: transform 0.1s ease-out;
     }
 
-    /* EDIT: do not force width:100% (can make sizing/overlay wonky and blur) */
     #map-image {
       display: block;
-      width: auto;      /* was: 100% */
+      width: auto;
       height: auto;
       max-width: none;
       user-select: none;
@@ -56,13 +47,11 @@
     /* SVG Overlay */
     #route-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
     }
-
     #route-overlay circle,
     #route-overlay text {
       pointer-events: auto;
@@ -73,7 +62,7 @@
     .route-base {
       fill: none;
       stroke: #6b4423;
-      stroke-width: 3;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
       opacity: 0.4;
@@ -83,31 +72,32 @@
     .route-completed {
       fill: none;
       stroke: url(#route-gradient);
-      stroke-width: 4;
+      stroke-width: 2.6;
       stroke-linecap: round;
       stroke-linejoin: round;
-      filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.6));
+      filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.45));
     }
 
     /* Waypoint markers */
     .waypoint {
       transition: all 0.2s ease;
+      transform-box: fill-box;
+      transform-origin: center;
     }
 
-    .waypoint:hover {
-      transform: scale(1.3);
+    /* EDIT: remove transform scale hover to avoid SVG jitter */
+    .waypoint:hover circle {
+      r: 1.35; /* gentle enlarge without transforms */
     }
 
     .waypoint-reached circle {
       fill: #16a34a;
       stroke: #fef3c7;
     }
-
     .waypoint-unreached circle {
       fill: #f59e0b;
       stroke: #78350f;
     }
-
     .waypoint-current circle {
       fill: #dc2626;
       stroke: #fef3c7;
@@ -133,9 +123,7 @@
     /* UI Panel */
     #ui-panel {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       background: linear-gradient(to top, rgba(29, 24, 16, 0.98), rgba(29, 24, 16, 0.95));
       border-top: 3px solid #92400e;
       max-height: 45vh;
@@ -145,9 +133,7 @@
       transition: transform 0.3s ease;
     }
 
-    #ui-panel.minimized {
-      transform: translateY(calc(100% - 50px));
-    }
+    #ui-panel.minimized { transform: translateY(calc(100% - 50px)); }
 
     #panel-handle {
       text-align: center;
@@ -160,9 +146,7 @@
       background: rgba(20, 16, 12, 0.5);
     }
 
-    #panel-content {
-      padding: 16px;
-    }
+    #panel-content { padding: 16px; }
 
     /* Stats Grid */
     .stats-grid {
@@ -195,10 +179,7 @@
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    .stat-unit {
-      font-size: 12px;
-      color: #b8956a;
-    }
+    .stat-unit { font-size: 12px; color: #b8956a; }
 
     /* Progress bar */
     .progress-container {
@@ -215,13 +196,12 @@
       height: 100%;
       background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626);
       transition: width 0.5s ease;
-      box-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.6); /* EDIT: fixed extra ) */
     }
 
     .progress-text {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       font-size: 12px;
       font-weight: bold;
@@ -270,9 +250,7 @@
       gap: 8px;
     }
 
-    .input-group {
-      margin-bottom: 12px;
-    }
+    .input-group { margin-bottom: 12px; }
 
     .input-label {
       display: block;
@@ -363,10 +341,7 @@
     #waypoint-modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.8);
       z-index: 200;
       align-items: center;
@@ -374,9 +349,7 @@
       padding: 20px;
     }
 
-    #waypoint-modal.active {
-      display: flex;
-    }
+    #waypoint-modal.active { display: flex; }
 
     .modal-content {
       background: linear-gradient(135deg, #422006, #2d1810);
@@ -422,10 +395,7 @@
     #celebration {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.9);
       z-index: 300;
       align-items: center;
@@ -433,14 +403,9 @@
       animation: fadeIn 0.5s;
     }
 
-    #celebration.active {
-      display: flex;
-    }
+    #celebration.active { display: flex; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .celebration-content {
       text-align: center;
@@ -448,10 +413,7 @@
       animation: scaleIn 0.5s ease-out;
     }
 
-    @keyframes scaleIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+    @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
     .celebration-icon {
       font-size: 80px;
@@ -480,463 +442,511 @@
     }
   </style>
 </head>
+
 <body>
+  <!-- Map Container -->
+  <div id="map-container">
+    <div id="map-wrapper">
+      <img id="map-image" src="middle-earth-map.jpg" alt="Middle-earth Map" />
+      <svg id="route-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="route-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+          </linearGradient>
+        </defs>
 
-<!-- Map Container -->
-<div id="map-container">
-  <div id="map-wrapper">
-    <img id="map-image" src="middle-earth-map.jpg" alt="Middle-earth Map">
-    <svg id="route-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="route-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
-          <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
-        </linearGradient>
-      </defs>
+        <polyline id="route-base" class="route-base"></polyline>
+        <polyline id="route-completed" class="route-completed"></polyline>
 
-      <polyline id="route-base" class="route-base"></polyline>
-      <polyline id="route-completed" class="route-completed"></polyline>
-      <g id="waypoints"></g>
+        <g id="waypoints"></g>
 
-      <g id="character-marker">
-        <circle r="1.5" fill="#dc2626" stroke="#fef3c7" stroke-width="0.3"/>
-        <text y="3.5" text-anchor="middle" font-size="3" fill="#fef3c7">🧙‍♂️</text>
-      </g>
-    </svg>
-  </div>
-</div>
-
-<!-- Zoom Controls -->
-<div class="zoom-controls">
-  <button class="zoom-btn" id="zoom-in">+</button>
-  <button class="zoom-btn" id="zoom-out">−</button>
-  <button class="zoom-btn" id="zoom-reset" style="font-size: 20px;">⟲</button>
-</div>
-
-<!-- UI Panel -->
-<div id="ui-panel">
-  <div id="panel-handle">
-    ⬆️ Journey Progress ⬆️
-  </div>
-  <div id="panel-content">
-    <div class="location-card">
-      <div class="location-name" id="current-location">Bag End, The Shire</div>
-      <div class="location-desc" id="location-desc">Green rolling hills, comfortable and peaceful</div>
-    </div>
-
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
-      <div class="progress-text" id="progress-text">0% Complete</div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Walked</div>
-        <div class="stat-value" id="stat-walked">0<span class="stat-unit">km</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Remaining</div>
-        <div class="stat-value" id="stat-remaining">2863<span class="stat-unit">km</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Next Waypoint</div>
-        <div class="stat-value" id="stat-next" style="font-size: 18px;">Bucklebury</div>
-      </div>
-    </div>
-
-    <div class="log-section">
-      <div class="log-title">📝 Log Today's Walk</div>
-      <div class="input-group">
-        <label class="input-label">Distance (km)</label>
-        <input type="number" id="distance-input" step="0.1" placeholder="5.0">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Note (optional)</label>
-        <input type="text" id="note-input" placeholder="Morning walk through the park...">
-      </div>
-      <button class="btn btn-primary" id="log-btn">➕ Add Entry</button>
+        <!-- EDIT: smaller character marker -->
+        <g id="character-marker">
+          <circle r="0.9" fill="#dc2626" stroke="#fef3c7" stroke-width="0.25"></circle>
+          <text y="2.2" text-anchor="middle" font-size="2" fill="#fef3c7">🧙‍♂️</text>
+        </g>
+      </svg>
     </div>
   </div>
-</div>
 
-<div id="waypoint-modal">
-  <div class="modal-content">
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-distance" id="modal-distance"></div>
-    <div class="modal-lore" id="modal-lore"></div>
-    <button class="btn modal-close" id="modal-close">Close</button>
+  <!-- Zoom Controls -->
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoom-in">+</button>
+    <button class="zoom-btn" id="zoom-out">−</button>
+    <button class="zoom-btn" id="zoom-reset" style="font-size: 20px;">⟲</button>
   </div>
-</div>
 
-<div id="celebration">
-  <div class="celebration-content">
-    <div class="celebration-icon">🏆</div>
-    <div class="celebration-title" id="celebration-title"></div>
-    <div class="celebration-text" id="celebration-text"></div>
+  <!-- UI Panel -->
+  <div id="ui-panel">
+    <div id="panel-handle">⬆️ Journey Progress ⬆️</div>
+
+    <div id="panel-content">
+      <div class="location-card">
+        <div class="location-name" id="current-location">Bag End, The Shire</div>
+        <div class="location-desc" id="location-desc">Green rolling hills, comfortable and peaceful</div>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+        <div class="progress-text" id="progress-text">0% Complete</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Walked</div>
+          <div class="stat-value" id="stat-walked">0<span class="stat-unit">km</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Remaining</div>
+          <div class="stat-value" id="stat-remaining">2863<span class="stat-unit">km</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Next Waypoint</div>
+          <div class="stat-value" id="stat-next" style="font-size: 18px;">Bucklebury</div>
+        </div>
+      </div>
+
+      <div class="log-section">
+        <div class="log-title">📝 Log Today's Walk</div>
+
+        <div class="input-group">
+          <label class="input-label">Distance (km)</label>
+          <input type="number" id="distance-input" step="0.1" placeholder="5.0" />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Note (optional)</label>
+          <input type="text" id="note-input" placeholder="Morning walk through the park..." />
+        </div>
+
+        <button class="btn btn-primary" id="log-btn">➕ Add Entry</button>
+
+        <!-- EDIT: Calibration Mode -->
+        <div style="margin-top: 12px;">
+          <button class="btn" id="calibrate-btn" style="background:#6b4423;color:#f5e6d3;">
+            🎯 Calibration Mode: OFF
+          </button>
+          <div style="font-size:12px;color:#d4a574;margin-top:6px;line-height:1.3;">
+            Turn ON, then tap/click the exact waypoint location on the map. It will show x/y % to paste into WAYPOINTS.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- Waypoint Modal -->
+  <div id="waypoint-modal">
+    <div class="modal-content">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-distance" id="modal-distance"></div>
+      <div class="modal-lore" id="modal-lore"></div>
+      <button class="btn modal-close" id="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Celebration -->
+  <div id="celebration">
+    <div class="celebration-content">
+      <div class="celebration-icon">🏆</div>
+      <div class="celebration-title" id="celebration-title"></div>
+      <div class="celebration-text" id="celebration-text"></div>
+    </div>
+  </div>
 
 <script>
-const WAYPOINTS = [
-  { id: 1, name: "Bag End, The Shire", distance: 0, x: 18, y: 26, description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
-  { id: 2, name: "Bucklebury Ferry", distance: 28, x: 20, y: 29, description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
-  { id: 3, name: "Bree", distance: 165, x: 26, y: 34, description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
-  { id: 4, name: "Weathertop", distance: 280, x: 32, y: 32, description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
-  { id: 5, name: "Ford of Bruinen", distance: 440, x: 38, y: 29, description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
-  { id: 6, name: "Rivendell", distance: 458, x: 40, y: 28, description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
-  { id: 7, name: "Hollin Gate", distance: 680, x: 45, y: 35, description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
-  { id: 8, name: "Moria", distance: 850, x: 48, y: 38, description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
-  { id: 9, name: "Lothlórien", distance: 1020, x: 53, y: 42, description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
-  { id: 10, name: "Amon Hen", distance: 1260, x: 53, y: 52, description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
-  { id: 11, name: "Emyn Muil", distance: 1380, x: 56, y: 55, description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
-  { id: 12, name: "Dead Marshes", distance: 1540, x: 60, y: 57, description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
-  { id: 13, name: "Black Gate", distance: 1720, x: 64, y: 58, description: "The great gate of Mordor", lore: "The mighty gateway to Mordor, flanked by the Towers of the Teeth. Too well guarded for passage." },
-  { id: 14, name: "Ithilien", distance: 1870, x: 66, y: 63, description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
-  { id: 15, name: "Cirith Ungol", distance: 2120, x: 70, y: 68, description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
-  { id: 16, name: "Tower of Cirith Ungol", distance: 2150, x: 71, y: 69, description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
-  { id: 17, name: "Morgul Vale", distance: 2240, x: 72, y: 72, description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
-  { id: 18, name: "Gorgoroth Plains", distance: 2550, x: 77, y: 78, description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
-  { id: 19, name: "Mount Doom", distance: 2863, x: 83, y: 83, description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here in the Cracks of Doom, the Ring must be unmade." }
-];
+  // Waypoints with coordinates as percentages of map dimensions (0–100)
+  const WAYPOINTS = [
+    { id: 1, name: "Bag End, The Shire", distance: 0, x: 18, y: 26, description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
+    { id: 2, name: "Bucklebury Ferry", distance: 28, x: 20, y: 29, description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
+    { id: 3, name: "Bree", distance: 165, x: 26, y: 34, description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
+    { id: 4, name: "Weathertop", distance: 280, x: 32, y: 32, description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
+    { id: 5, name: "Ford of Bruinen", distance: 440, x: 38, y: 29, description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
+    { id: 6, name: "Rivendell", distance: 458, x: 40, y: 28, description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
+    { id: 7, name: "Hollin Gate", distance: 680, x: 45, y: 35, description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
+    { id: 8, name: "Moria", distance: 850, x: 48, y: 38, description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
+    { id: 9, name: "Lothlórien", distance: 1020, x: 53, y: 42, description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
+    { id: 10, name: "Amon Hen", distance: 1260, x: 53, y: 52, description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
+    { id: 11, name: "Emyn Muil", distance: 1380, x: 56, y: 55, description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
+    { id: 12, name: "Dead Marshes", distance: 1540, x: 60, y: 57, description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
+    { id: 13, name: "Black Gate", distance: 1720, x: 64, y: 58, description: "The great gate of Mordor", lore: "The mighty gateway to Mordor, flanked by the Towers of the Teeth. Too well guarded for passage." },
+    { id: 14, name: "Ithilien", distance: 1870, x: 66, y: 63, description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
+    { id: 15, name: "Cirith Ungol", distance: 2120, x: 70, y: 68, description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
+    { id: 16, name: "Tower of Cirith Ungol", distance: 2150, x: 71, y: 69, description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
+    { id: 17, name: "Morgul Vale", distance: 2240, x: 72, y: 72, description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
+    { id: 18, name: "Gorgoroth Plains", distance: 2550, x: 77, y: 78, description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
+    { id: 19, name: "Mount Doom", distance: 2863, x: 83, y: 83, description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here in the Cracks of Doom, the Ring must be unmade." }
+  ];
 
-const TOTAL_DISTANCE = 2863;
+  const TOTAL_DISTANCE = 2863;
 
-// State
-let entries = [];
-let scale = 1;
-let translateX = 0;
-let translateY = 0;
-let isPanning = false;
-let startX = 0;
-let startY = 0;
+  // State
+  let entries = [];
+  let scale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let isPanning = false;
+  let startX = 0;
+  let startY = 0;
 
-// DOM Elements
-const mapContainer = document.getElementById('map-container');
-const mapWrapper = document.getElementById('map-wrapper');
-const mapImage = document.getElementById('map-image');
-const routeBase = document.getElementById('route-base');
-const routeCompleted = document.getElementById('route-completed');
-const waypointsGroup = document.getElementById('waypoints');
-const characterMarker = document.getElementById('character-marker');
-const uiPanel = document.getElementById('ui-panel');
-const panelHandle = document.getElementById('panel-handle');
+  // EDIT: Calibration state
+  let calibrationMode = false;
 
-// Initialize
-function init() {
-  loadEntries();
-  setupZoomControls();
-  setupUI();
-  setupMap();
+  // DOM Elements
+  const mapContainer = document.getElementById('map-container');
+  const mapWrapper = document.getElementById('map-wrapper');
+  const mapImage = document.getElementById('map-image');
+  const routeBase = document.getElementById('route-base');
+  const routeCompleted = document.getElementById('route-completed');
+  const waypointsGroup = document.getElementById('waypoints');
+  const characterMarker = document.getElementById('character-marker');
+  const uiPanel = document.getElementById('ui-panel');
+  const panelHandle = document.getElementById('panel-handle');
 
-  // EDIT: ensure drawing happens after image has loaded
-  if (mapImage.complete && mapImage.naturalWidth > 0) {
-    renderRoute();
-    renderWaypoints();
-    updateProgress();
-    centerMap();
-  } else {
-    mapImage.onload = () => {
+  function init() {
+    loadEntries();
+    setupZoomControls();
+    setupUI();
+    setupMap();
+
+    if (mapImage.complete && mapImage.naturalWidth > 0) {
       renderRoute();
       renderWaypoints();
       updateProgress();
       centerMap();
-    };
+    } else {
+      mapImage.onload = () => {
+        renderRoute();
+        renderWaypoints();
+        updateProgress();
+        centerMap();
+      };
+    }
   }
-}
 
-function loadEntries() {
-  const saved = localStorage.getItem('frodoJourneyEntries');
-  if (saved) entries = JSON.parse(saved);
-}
+  function loadEntries() {
+    const saved = localStorage.getItem('frodoJourneyEntries');
+    if (saved) entries = JSON.parse(saved);
+  }
 
-function saveEntries() {
-  localStorage.setItem('frodoJourneyEntries', JSON.stringify(entries));
-}
+  function saveEntries() {
+    localStorage.setItem('frodoJourneyEntries', JSON.stringify(entries));
+  }
 
-// Setup map pan and zoom
-function setupMap() {
-  // EDIT: removed the code that overwrote SVG viewBox to pixels.
-  // Your WAYPOINT x/y values are in 0–100 percent units and your SVG already uses viewBox="0 0 100 100".
+  // EDIT: convert click to percent coords (0–100) relative to the image
+  function getPercentCoordsFromEvent(e) {
+    const rect = mapImage.getBoundingClientRect();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
-  mapContainer.addEventListener('mousedown', startPan);
-  mapContainer.addEventListener('touchstart', startPan, { passive: false });
-  document.addEventListener('mousemove', pan);
-  document.addEventListener('touchmove', pan, { passive: false });
-  document.addEventListener('mouseup', endPan);
-  document.addEventListener('touchend', endPan);
+    const xPx = (clientX - rect.left) / rect.width;
+    const yPx = (clientY - rect.top) / rect.height;
 
-  // Pinch zoom
-  let lastDistance = 0;
-  mapContainer.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      lastDistance = Math.sqrt(dx * dx + dy * dy);
-    }
-  }, { passive: false });
+    const x = Math.max(0, Math.min(1, xPx)) * 100;
+    const y = Math.max(0, Math.min(1, yPx)) * 100;
 
-  mapContainer.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2) {
-      e.preventDefault();
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const delta = distance - lastDistance;
+    return { x: +x.toFixed(2), y: +y.toFixed(2) };
+  }
 
-      if (Math.abs(delta) > 1) {
-        zoom(delta > 0 ? 1.05 : 0.95);
-        lastDistance = distance;
-      }
-    }
-  }, { passive: false });
-}
+  function setupMap() {
+    // Pan with mouse/touch
+    mapContainer.addEventListener('mousedown', startPan);
+    mapContainer.addEventListener('touchstart', startPan, { passive: false });
+    document.addEventListener('mousemove', pan);
+    document.addEventListener('touchmove', pan, { passive: false });
+    document.addEventListener('mouseup', endPan);
+    document.addEventListener('touchend', endPan);
 
-function startPan(e) {
-  if (e.target.closest('#ui-panel') || e.target.closest('.zoom-controls')) return;
-  if (e.touches && e.touches.length > 1) return;
+    // EDIT: calibration click capture
+    mapContainer.addEventListener('click', (e) => {
+      if (!calibrationMode) return;
+      if (e.target.closest('#ui-panel') || e.target.closest('.zoom-controls')) return;
 
-  isPanning = true;
-  mapContainer.classList.add('grabbing');
-
-  const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-  const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-  startX = clientX - translateX;
-  startY = clientY - translateY;
-}
-
-function pan(e) {
-  if (!isPanning) return;
-
-  const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-  const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-  translateX = clientX - startX;
-  translateY = clientY - startY;
-
-  updateTransform();
-}
-
-function endPan() {
-  isPanning = false;
-  mapContainer.classList.remove('grabbing');
-}
-
-function zoom(factor) {
-  const newScale = Math.max(0.5, Math.min(5, scale * factor));
-  scale = newScale;
-  updateTransform();
-}
-
-function updateTransform() {
-  mapWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-}
-
-function centerMap() {
-  const shireWaypoint = WAYPOINTS[0];
-  const containerRect = mapContainer.getBoundingClientRect();
-
-  // EDIT: use natural image size (more stable than getBoundingClientRect here)
-  const w = mapImage.naturalWidth || mapImage.width;
-  const h = mapImage.naturalHeight || mapImage.height;
-
-  translateX = containerRect.width / 2 - (w * shireWaypoint.x / 100) * scale;
-  translateY = containerRect.height / 2 - (h * shireWaypoint.y / 100) * scale;
-
-  updateTransform();
-}
-
-function setupZoomControls() {
-  document.getElementById('zoom-in').addEventListener('click', () => zoom(1.3));
-  document.getElementById('zoom-out').addEventListener('click', () => zoom(0.77));
-  document.getElementById('zoom-reset').addEventListener('click', () => {
-    scale = 1;
-    centerMap();
-  });
-}
-
-function setupUI() {
-  panelHandle.addEventListener('click', () => {
-    uiPanel.classList.toggle('minimized');
-  });
-
-  document.getElementById('log-btn').addEventListener('click', addEntry);
-
-  document.getElementById('modal-close').addEventListener('click', () => {
-    document.getElementById('waypoint-modal').classList.remove('active');
-  });
-
-  document.getElementById('celebration').addEventListener('click', () => {
-    document.getElementById('celebration').classList.remove('active');
-  });
-}
-
-function renderRoute() {
-  const points = WAYPOINTS.map(w => `${w.x},${w.y}`).join(' ');
-  routeBase.setAttribute('points', points);
-  routeCompleted.setAttribute('points', points);
-}
-
-function renderWaypoints() {
-  waypointsGroup.innerHTML = '';
-
-  const totalWalked = entries.reduce((sum, e) => sum + e.distance, 0);
-  const currentWaypointIndex = WAYPOINTS.findIndex(w => w.distance > totalWalked);
-
-  WAYPOINTS.forEach((waypoint, index) => {
-    const isReached = totalWalked >= waypoint.distance;
-    const isCurrent = index === currentWaypointIndex;
-
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.classList.add('waypoint');
-    if (isReached) g.classList.add('waypoint-reached');
-    else if (isCurrent) g.classList.add('waypoint-current');
-    else g.classList.add('waypoint-unreached');
-
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', waypoint.x);
-    circle.setAttribute('cy', waypoint.y);
-    circle.setAttribute('r', isCurrent ? 1.5 : 1);
-    circle.setAttribute('stroke-width', isCurrent ? 0.4 : 0.3);
-
-    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    innerCircle.setAttribute('cx', waypoint.x);
-    innerCircle.setAttribute('cy', waypoint.y);
-    innerCircle.setAttribute('r', 0.4);
-    innerCircle.setAttribute('fill', '#fff');
-    innerCircle.setAttribute('opacity', '0.8');
-
-    g.appendChild(circle);
-    g.appendChild(innerCircle);
-
-    g.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showWaypointModal(waypoint);
+      const { x, y } = getPercentCoordsFromEvent(e);
+      alert(`Waypoint coords:\n  x: ${x}\n  y: ${y}\n\nPaste these into the matching WAYPOINT entry.`);
+      console.log('Calibration coords:', { x, y });
     });
 
-    waypointsGroup.appendChild(g);
-  });
-}
+    // Pinch zoom
+    let lastDistance = 0;
+    mapContainer.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastDistance = Math.sqrt(dx * dx + dy * dy);
+      }
+    }, { passive: false });
 
-function showWaypointModal(waypoint) {
-  document.getElementById('modal-title').textContent = waypoint.name;
-  document.getElementById('modal-distance').textContent = `${waypoint.distance} km from The Shire`;
-  document.getElementById('modal-lore').textContent = waypoint.lore;
-  document.getElementById('waypoint-modal').classList.add('active');
-}
+    mapContainer.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const delta = distance - lastDistance;
 
-function updateProgress() {
-  const totalWalked = entries.reduce((sum, e) => sum + e.distance, 0);
-  const remaining = Math.max(0, TOTAL_DISTANCE - totalWalked);
-  const percentComplete = Math.min(100, (totalWalked / TOTAL_DISTANCE) * 100);
-
-  document.getElementById('stat-walked').innerHTML = `${totalWalked.toFixed(1)}<span class="stat-unit">km</span>`;
-  document.getElementById('stat-remaining').innerHTML = `${remaining.toFixed(0)}<span class="stat-unit">km</span>`;
-
-  document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-  document.getElementById('progress-text').textContent = `${percentComplete.toFixed(1)}% Complete`;
-
-  const currentWaypointIndex = WAYPOINTS.findIndex(w => w.distance > totalWalked);
-  const currentWaypoint = currentWaypointIndex >= 0 ? WAYPOINTS[currentWaypointIndex] : WAYPOINTS[WAYPOINTS.length - 1];
-  const previousWaypoint = currentWaypointIndex > 0 ? WAYPOINTS[currentWaypointIndex - 1] : WAYPOINTS[0];
-
-  document.getElementById('current-location').textContent = currentWaypoint.name;
-  document.getElementById('location-desc').textContent = currentWaypoint.description;
-  document.getElementById('stat-next').textContent = currentWaypoint.name.split(',')[0];
-
-  const totalLength = calculatePathLength();
-  const completedLength = totalLength * (percentComplete / 100);
-  routeCompleted.style.strokeDasharray = `${completedLength} ${totalLength}`;
-
-  let markerX = previousWaypoint.x;
-  let markerY = previousWaypoint.y;
-
-  if (currentWaypointIndex >= 0 && currentWaypointIndex < WAYPOINTS.length) {
-    const segmentStart = previousWaypoint.distance;
-    const segmentEnd = currentWaypoint.distance;
-    const segmentProgress = (totalWalked - segmentStart) / (segmentEnd - segmentStart);
-
-    markerX = previousWaypoint.x + (currentWaypoint.x - previousWaypoint.x) * segmentProgress;
-    markerY = previousWaypoint.y + (currentWaypoint.y - previousWaypoint.y) * segmentProgress;
-  } else if (totalWalked >= TOTAL_DISTANCE) {
-    markerX = WAYPOINTS[WAYPOINTS.length - 1].x;
-    markerY = WAYPOINTS[WAYPOINTS.length - 1].y;
+        if (Math.abs(delta) > 1) {
+          zoom(delta > 0 ? 1.05 : 0.95);
+          lastDistance = distance;
+        }
+      }
+    }, { passive: false });
   }
 
-  characterMarker.setAttribute('transform', `translate(${markerX}, ${markerY})`);
-  renderWaypoints();
-}
+  function startPan(e) {
+    if (e.target.closest('#ui-panel') || e.target.closest('.zoom-controls')) return;
+    if (e.touches && e.touches.length > 1) return;
 
-function calculatePathLength() {
-  let length = 0;
-  for (let i = 1; i < WAYPOINTS.length; i++) {
-    const dx = WAYPOINTS[i].x - WAYPOINTS[i - 1].x;
-    const dy = WAYPOINTS[i].y - WAYPOINTS[i - 1].y;
-    length += Math.sqrt(dx * dx + dy * dy);
-  }
-  return length;
-}
+    isPanning = true;
+    mapContainer.classList.add('grabbing');
 
-function addEntry() {
-  const distanceInput = document.getElementById('distance-input');
-  const noteInput = document.getElementById('note-input');
-
-  const distance = parseFloat(distanceInput.value);
-  if (!distance || distance <= 0) {
-    alert('Please enter a valid distance');
-    return;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    startX = clientX - translateX;
+    startY = clientY - translateY;
   }
 
-  const previousTotal = entries.reduce((sum, e) => sum + e.distance, 0);
+  function pan(e) {
+    if (!isPanning) return;
 
-  const newEntry = {
-    id: Date.now(),
-    date: new Date().toISOString().split('T')[0],
-    distance,
-    note: noteInput.value.trim()
-  };
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    translateX = clientX - startX;
+    translateY = clientY - startY;
 
-  entries.push(newEntry);
-  saveEntries();
+    updateTransform();
+  }
 
-  distanceInput.value = '';
-  noteInput.value = '';
+  function endPan() {
+    isPanning = false;
+    mapContainer.classList.remove('grabbing');
+  }
 
-  updateProgress();
+  function zoom(factor) {
+    const newScale = Math.max(0.5, Math.min(5, scale * factor));
+    scale = newScale;
+    updateTransform();
+  }
 
-  const newTotal = entries.reduce((sum, e) => sum + e.distance, 0);
-  const passedWaypoint = WAYPOINTS.find(w =>
-    w.distance > previousTotal && w.distance <= newTotal
-  );
+  function updateTransform() {
+    mapWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
 
-  if (passedWaypoint) showCelebration(passedWaypoint);
+  function centerMap() {
+    const shireWaypoint = WAYPOINTS[0];
+    const containerRect = mapContainer.getBoundingClientRect();
+    const w = mapImage.naturalWidth || mapImage.width;
+    const h = mapImage.naturalHeight || mapImage.height;
 
-  if (newTotal >= TOTAL_DISTANCE && previousTotal < TOTAL_DISTANCE) {
-    setTimeout(() => {
-      showCelebration({
-        name: "Quest Complete!",
-        lore: "You have cast the One Ring into the fires of Mount Doom and saved Middle-earth! The journey of 2,863 km is complete. The Great Eye is vanquished, the Dark Tower falls, and the Age of Men begins."
+    translateX = containerRect.width / 2 - (w * shireWaypoint.x / 100) * scale;
+    translateY = containerRect.height / 2 - (h * shireWaypoint.y / 100) * scale;
+
+    updateTransform();
+  }
+
+  function setupZoomControls() {
+    document.getElementById('zoom-in').addEventListener('click', () => zoom(1.3));
+    document.getElementById('zoom-out').addEventListener('click', () => zoom(0.77));
+    document.getElementById('zoom-reset').addEventListener('click', () => {
+      scale = 1;
+      centerMap();
+    });
+  }
+
+  function setupUI() {
+    panelHandle.addEventListener('click', () => {
+      uiPanel.classList.toggle('minimized');
+    });
+
+    document.getElementById('log-btn').addEventListener('click', addEntry);
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('waypoint-modal').classList.remove('active');
+    });
+
+    document.getElementById('celebration').addEventListener('click', () => {
+      document.getElementById('celebration').classList.remove('active');
+    });
+
+    // EDIT: calibration toggle
+    const calibrateBtn = document.getElementById('calibrate-btn');
+    if (calibrateBtn) {
+      calibrateBtn.addEventListener('click', () => {
+        calibrationMode = !calibrationMode;
+        calibrateBtn.textContent = `🎯 Calibration Mode: ${calibrationMode ? 'ON' : 'OFF'}`;
+        calibrateBtn.style.border = calibrationMode ? '2px solid #f59e0b' : 'none';
       });
-    }, 1000);
+    }
   }
-}
 
-function showCelebration(waypoint) {
-  document.getElementById('celebration-title').textContent = waypoint.name;
-  document.getElementById('celebration-text').textContent = waypoint.lore;
-  document.getElementById('celebration').classList.add('active');
+  function renderRoute() {
+    const points = WAYPOINTS.map(w => `${w.x},${w.y}`).join(' ');
+    routeBase.setAttribute('points', points);
+    routeCompleted.setAttribute('points', points);
+  }
 
-  setTimeout(() => {
-    document.getElementById('celebration').classList.remove('active');
-  }, 5000);
-}
+  function renderWaypoints() {
+    waypointsGroup.innerHTML = '';
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+    const totalWalked = entries.reduce((sum, e) => sum + e.distance, 0);
+    const currentWaypointIndex = WAYPOINTS.findIndex(w => w.distance > totalWalked);
+
+    WAYPOINTS.forEach((waypoint, index) => {
+      const isReached = totalWalked >= waypoint.distance;
+      const isCurrent = index === currentWaypointIndex;
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.classList.add('waypoint');
+      if (isReached) g.classList.add('waypoint-reached');
+      else if (isCurrent) g.classList.add('waypoint-current');
+      else g.classList.add('waypoint-unreached');
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', waypoint.x);
+      circle.setAttribute('cy', waypoint.y);
+
+      // EDIT: smaller markers
+      circle.setAttribute('r', isCurrent ? 0.9 : 0.6);
+      circle.setAttribute('stroke-width', isCurrent ? 0.25 : 0.2);
+
+      const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      innerCircle.setAttribute('cx', waypoint.x);
+      innerCircle.setAttribute('cy', waypoint.y);
+      innerCircle.setAttribute('r', 0.22);
+      innerCircle.setAttribute('fill', '#fff');
+      innerCircle.setAttribute('opacity', '0.8');
+
+      g.appendChild(circle);
+      g.appendChild(innerCircle);
+
+      g.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showWaypointModal(waypoint);
+      });
+
+      waypointsGroup.appendChild(g);
+    });
+  }
+
+  function showWaypointModal(waypoint) {
+    document.getElementById('modal-title').textContent = waypoint.name;
+    document.getElementById('modal-distance').textContent = `${waypoint.distance} km from The Shire`;
+    document.getElementById('modal-lore').textContent = waypoint.lore;
+    document.getElementById('waypoint-modal').classList.add('active');
+  }
+
+  function updateProgress() {
+    const totalWalked = entries.reduce((sum, e) => sum + e.distance, 0);
+    const remaining = Math.max(0, TOTAL_DISTANCE - totalWalked);
+    const percentComplete = Math.min(100, (totalWalked / TOTAL_DISTANCE) * 100);
+
+    document.getElementById('stat-walked').innerHTML =
+      `${totalWalked.toFixed(1)}<span class="stat-unit">km</span>`;
+    document.getElementById('stat-remaining').innerHTML =
+      `${remaining.toFixed(0)}<span class="stat-unit">km</span>`;
+
+    document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+    document.getElementById('progress-text').textContent = `${percentComplete.toFixed(1)}% Complete`;
+
+    const currentWaypointIndex = WAYPOINTS.findIndex(w => w.distance > totalWalked);
+    const currentWaypoint = currentWaypointIndex >= 0 ? WAYPOINTS[currentWaypointIndex] : WAYPOINTS[WAYPOINTS.length - 1];
+    const previousWaypoint = currentWaypointIndex > 0 ? WAYPOINTS[currentWaypointIndex - 1] : WAYPOINTS[0];
+
+    document.getElementById('current-location').textContent = currentWaypoint.name;
+    document.getElementById('location-desc').textContent = currentWaypoint.description;
+    document.getElementById('stat-next').textContent = currentWaypoint.name.split(',')[0];
+
+    const totalLength = calculatePathLength();
+    const completedLength = totalLength * (percentComplete / 100);
+    routeCompleted.style.strokeDasharray = `${completedLength} ${totalLength}`;
+
+    let markerX = previousWaypoint.x;
+    let markerY = previousWaypoint.y;
+
+    if (currentWaypointIndex >= 0 && currentWaypointIndex < WAYPOINTS.length) {
+      const segmentStart = previousWaypoint.distance;
+      const segmentEnd = currentWaypoint.distance;
+      const segmentProgress = (totalWalked - segmentStart) / (segmentEnd - segmentStart);
+
+      markerX = previousWaypoint.x + (currentWaypoint.x - previousWaypoint.x) * segmentProgress;
+      markerY = previousWaypoint.y + (currentWaypoint.y - previousWaypoint.y) * segmentProgress;
+    } else if (totalWalked >= TOTAL_DISTANCE) {
+      markerX = WAYPOINTS[WAYPOINTS.length - 1].x;
+      markerY = WAYPOINTS[WAYPOINTS.length - 1].y;
+    }
+
+    characterMarker.setAttribute('transform', `translate(${markerX}, ${markerY})`);
+    renderWaypoints();
+  }
+
+  function calculatePathLength() {
+    let length = 0;
+    for (let i = 1; i < WAYPOINTS.length; i++) {
+      const dx = WAYPOINTS[i].x - WAYPOINTS[i - 1].x;
+      const dy = WAYPOINTS[i].y - WAYPOINTS[i - 1].y;
+      length += Math.sqrt(dx * dx + dy * dy);
+    }
+    return length;
+  }
+
+  function addEntry() {
+    const distanceInput = document.getElementById('distance-input');
+    const noteInput = document.getElementById('note-input');
+
+    const distance = parseFloat(distanceInput.value);
+    if (!distance || distance <= 0) {
+      alert('Please enter a valid distance');
+      return;
+    }
+
+    const previousTotal = entries.reduce((sum, e) => sum + e.distance, 0);
+
+    const newEntry = {
+      id: Date.now(),
+      date: new Date().toISOString().split('T')[0],
+      distance,
+      note: noteInput.value.trim()
+    };
+
+    entries.push(newEntry);
+    saveEntries();
+
+    distanceInput.value = '';
+    noteInput.value = '';
+
+    updateProgress();
+
+    const newTotal = entries.reduce((sum, e) => sum + e.distance, 0);
+    const passedWaypoint = WAYPOINTS.find(w => w.distance > previousTotal && w.distance <= newTotal);
+
+    if (passedWaypoint) showCelebration(passedWaypoint);
+
+    if (newTotal >= TOTAL_DISTANCE && previousTotal < TOTAL_DISTANCE) {
+      setTimeout(() => {
+        showCelebration({
+          name: "Quest Complete!",
+          lore: "You have cast the One Ring into the fires of Mount Doom and saved Middle-earth! The journey of 2,863 km is complete. The Great Eye is vanquished, the Dark Tower falls, and the Age of Men begins."
+        });
+      }, 1000);
+    }
+  }
+
+  function showCelebration(waypoint) {
+    document.getElementById('celebration-title').textContent = waypoint.name;
+    document.getElementById('celebration-text').textContent = waypoint.lore;
+    document.getElementById('celebration').classList.add('active');
+
+    setTimeout(() => {
+      document.getElementById('celebration').classList.remove('active');
+    }, 5000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 
 </body>
