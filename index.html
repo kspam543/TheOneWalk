@@ -558,12 +558,12 @@
 <script>
   // Waypoints with coordinates as percentages of map dimensions (0–100)
   const WAYPOINTS = [
-    { id: 1, name: "Bag End, The Shire", distance: 0, x: 18, y: 26, description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
+    { id: 1, name: "Bag End, The Shire", distance: 0, x: 28.07, y: 28.54, description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
     { id: 2, name: "Bucklebury Ferry", distance: 28, x: 20, y: 29, description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
     { id: 3, name: "Bree", distance: 165, x: 26, y: 34, description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
     { id: 4, name: "Weathertop", distance: 280, x: 32, y: 32, description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
     { id: 5, name: "Ford of Bruinen", distance: 440, x: 38, y: 29, description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
-    { id: 6, name: "Rivendell", distance: 458, x: 40, y: 28, description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
+    { id: 6, name: "Rivendell", distance: 458, x: 50, y: 27.42, description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
     { id: 7, name: "Hollin Gate", distance: 680, x: 45, y: 35, description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
     { id: 8, name: "Moria", distance: 850, x: 48, y: 38, description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
     { id: 9, name: "Lothlórien", distance: 1020, x: 53, y: 42, description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
@@ -576,7 +576,7 @@
     { id: 16, name: "Tower of Cirith Ungol", distance: 2150, x: 71, y: 69, description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
     { id: 17, name: "Morgul Vale", distance: 2240, x: 72, y: 72, description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
     { id: 18, name: "Gorgoroth Plains", distance: 2550, x: 77, y: 78, description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
-    { id: 19, name: "Mount Doom", distance: 2863, x: 83, y: 83, description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here in the Cracks of Doom, the Ring must be unmade." }
+    { id: 19, name: "Mount Doom", distance: 2863, x: 71.71, y: 61.15, description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here in the Cracks of Doom, the Ring must be unmade." }
   ];
 
   const TOTAL_DISTANCE = 2863;
