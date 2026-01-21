@@ -6,26 +6,26 @@
   <title>The One Walk - Journey to Mount Doom</title>
 
   <style>
-    :root{
-      /* ========= QUICK SIZING CONTROLS (edit these) ========= */
-      --route-base-width: 0.30;        /* base route thickness (SVG units) */
-      --route-completed-width: 0.40;   /* completed route thickness */
-      --route-base-opacity: 0.35;
+   :root{
+  /* ========= QUICK SIZING CONTROLS (edit these) ========= */
+  --route-base-width: 0.30;        /* base route thickness (SVG units) */
+  --route-completed-width: 0.40;   /* completed route thickness */
+  --route-base-opacity: 0.35;
 
-      --waypoint-r: 0.45;              /* waypoint radius */
-      --waypoint-r-current: 0.65;      /* current waypoint radius */
-      --waypoint-stroke: 0.16;         /* waypoint stroke width */
-      --waypoint-inner-r: 0.16;
+  --waypoint-r: 0.32;              /* waypoint radius (reduced from 0.45) */
+  --waypoint-r-current: 0.46;      /* current waypoint radius (reduced from 0.65) */
+  --waypoint-stroke: 0.12;         /* waypoint stroke width (reduced from 0.16) */
+  --waypoint-inner-r: 0.12;        /* (reduced from 0.16) */
 
-      --marker-ring-r: 0.95;
-      --marker-outer-r: 0.55;
-      --marker-inner-r: 0.25;
-      --marker-emoji-size: 1.3;
+  --marker-ring-r: 0.95;
+  --marker-outer-r: 0.55;
+  --marker-inner-r: 0.25;
+  --marker-emoji-size: 1.3;
 
-      /* Map card height */
-      --map-height: 520px;             /* desktop */
-      --map-height-mobile: 420px;      /* mobile */
-    }
+  /* Map card height */
+  --map-height: 520px;             /* desktop */
+  --map-height-mobile: 420px;      /* mobile */
+}
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -261,23 +261,23 @@
     }
 
     /* Route */
-    .route-base{
-      fill:none;
-      stroke:#6b4423;
-      stroke-width: var(--route-base-width);
-      opacity: var(--route-base-opacity);
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 1.2 0.9;
-    }
-    .route-completed{
-      fill:none;
-      stroke: url(#route-gradient);
-      stroke-width: var(--route-completed-width);
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 3px rgba(220,38,38,0.35));
-    }
+.route-base{
+  fill:none;
+  stroke:#8b7355;  /* Parchment brown - solid color */
+  stroke-width: var(--route-base-width);
+  opacity: var(--route-base-opacity);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1.2 0.9;
+}
+.route-completed{
+  fill:none;
+  stroke: #c17817;  /* Warm amber/gold for completed - solid color */
+  stroke-width: var(--route-completed-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px rgba(193, 120, 23, 0.4));
+}
 
     /* Waypoints */
     .waypoint { transform-box: fill-box; transform-origin: center; }
@@ -564,6 +564,178 @@
     /* Hide/Show tabs */
     .tab{ display:none; }
     .tab.active{ display:block; }
+
+    /* Date picker styling */
+input[type="date"]{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 10px;
+  border: 2px solid rgba(30,58,138,0.18);
+  font-size: 16px;
+  font-family: Georgia, serif;
+  background:#fff;
+  color:#1f2937;
+}
+
+/* Daily goal card */
+.goal-card{
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.goal-progress{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:8px;
+}
+.goal-bar-wrap{
+  flex:1;
+  height:12px;
+  background:#fef3c7;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid #f59e0b;
+}
+.goal-bar-fill{
+  height:100%;
+  background:#16a34a;
+  transition: width 0.4s ease;
+}
+.goal-text{
+  font-size:13px;
+  font-weight:700;
+  color:#78350f;
+  white-space:nowrap;
+}
+.goal-edit{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.goal-edit input{
+  width:80px;
+  padding:6px 8px;
+  font-size:14px;
+}
+.goal-edit button{
+  padding:6px 12px;
+  background:#f59e0b;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:13px;
+}
+
+/* Achievements */
+.achievements-card{
+  background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+  border: 2px solid #a78bfa;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.achievement-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.achievement-item{
+  background:#fff;
+  border: 2px solid #ddd6fe;
+  border-radius:10px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition: all 0.2s ease;
+}
+.achievement-item.unlocked{
+  border-color:#a78bfa;
+  background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+}
+.achievement-item.locked{
+  opacity:0.5;
+  filter: grayscale(0.8);
+}
+.achievement-icon{
+  font-size:32px;
+  flex-shrink:0;
+}
+.achievement-info{
+  flex:1;
+  min-width:0;
+}
+.achievement-name{
+  font-weight:800;
+  font-size:13px;
+  color:#5b21b6;
+}
+.achievement-desc{
+  font-size:11px;
+  color:#7c3aed;
+  margin-top:2px;
+}
+.achievement-date{
+  font-size:10px;
+  color:#a78bfa;
+  margin-top:2px;
+}
+
+/* Toast notifications */
+.toast-container{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:200;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  pointer-events:none;
+}
+.toast{
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  color:#fff;
+  padding:14px 18px;
+  border-radius:12px;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+  font-weight:700;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  pointer-events:auto;
+  animation: slideIn 0.3s ease;
+  max-width:320px;
+}
+.toast-icon{
+  font-size:24px;
+}
+@keyframes slideIn{
+  from{ transform: translateX(100%); opacity:0; }
+  to{ transform: translateX(0); opacity:1; }
+}
+
+/* Unlocked badge in modal */
+.unlocked-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:13px;
+  color:#78350f;
+  margin-top:10px;
+}
   </style>
 </head>
 
@@ -583,6 +755,24 @@
 
     <!-- JOURNEY TAB -->
     <section class="tab active" id="tab-journey">
+      <!-- Daily Goal -->
+<div class="goal-card" id="dailyGoalCard">
+  <div style="display:flex; align-items:center; justify-content:space-between;">
+    <div style="font-weight:800; font-size:16px; color:#78350f;">🎯 Daily Goal</div>
+    <div id="goalStatus" style="font-size:13px; color:#78350f; font-weight:700;">—</div>
+  </div>
+  <div class="goal-progress">
+    <div class="goal-bar-wrap">
+      <div class="goal-bar-fill" id="goalBarFill"></div>
+    </div>
+    <div class="goal-text" id="goalProgressText">0 / 0 km</div>
+  </div>
+  <div class="goal-edit">
+    <span style="font-size:12px; color:#78350f;">Set goal:</span>
+    <input type="number" id="goalInput" step="0.1" min="0" placeholder="3.0" />
+    <button id="setGoalBtn">Save</button>
+  </div>
+</div>
       <div class="card" id="journeyOverview">
         <div class="overview-top">
           <div class="overview-left">
@@ -684,6 +874,14 @@
 
     <!-- STATS TAB -->
     <section class="tab" id="tab-stats">
+      <!-- Achievements -->
+<div class="achievements-card">
+  <h2 style="margin:0 0 4px 0; font-size:18px; color:#5b21b6; display:flex; align-items:center; gap:8px;">
+    🏆 Achievements
+  </h2>
+  <div style="font-size:12px; color:#7c3aed; margin-bottom:8px;" id="achievementsSummary">—</div>
+  <div class="achievement-grid" id="achievementGrid"></div>
+</div>
       <div class="grid4">
         <div class="statbox g-green">
           <div class="t">Current Streak</div>
@@ -731,18 +929,21 @@
         <h2>📅 Log Today's Walk</h2>
 
         <div style="display:grid; gap:12px;">
-          <div>
-            <label for="distanceInput">Distance (km)</label>
-            <input type="number" id="distanceInput" step="0.1" placeholder="5.0" />
-          </div>
-          <div>
-            <label for="noteInput">Note (optional)</label>
-            <input type="text" id="noteInput" placeholder="Morning walk in the park..." />
-          </div>
+  <div>
+    <label for="dateInput">Date</label>
+    <input type="date" id="dateInput" />
+  </div>
+  <div>
+    <label for="distanceInput">Distance (km)</label>
+    <input type="number" id="distanceInput" step="0.1" placeholder="5.0" />
+  </div>
+  <div>
+    <label for="noteInput">Note (optional)</label>
+    <input type="text" id="noteInput" placeholder="Morning walk in the park..." />
+  </div>
 
-          <button class="btn btn-blue" id="addEntryBtn">➕ Add Entry</button>
-        </div>
-      </div>
+  <button class="btn btn-blue" id="addEntryBtn">➕ Add Entry</button>
+</div>
 
       <div class="card purple-card">
         <h2>⬆️ Import from Fitness Apps</h2>
@@ -786,6 +987,12 @@
       <div class="v" id="wpTerrain">—</div>
 
       <div class="lore" id="wpLore">—</div>
+      <div id="wpUnlocked" style="display:none;">
+  <div class="unlocked-badge">
+    <span>🎉</span>
+    <span>Waypoint Unlocked!</span>
+  </div>
+</div>
     </div>
   </div>
 
@@ -803,6 +1010,8 @@ const FRODO_DAILY_PACE = TOTAL_DISTANCE / FRODO_TIMELINE_DAYS;
 
 // Local storage key
 const STORAGE_KEY = "frodoJourneyEntries";
+  const GOAL_STORAGE_KEY = "frodoJourneyDailyGoal";
+const DEFAULT_DAILY_GOAL = 3.0; // km
 
 // Terrain suggestions
 const TERRAIN_SUGGESTIONS = {
@@ -815,27 +1024,27 @@ const TERRAIN_SUGGESTIONS = {
 };
 
 // Your calibrated WAYPOINTS (0–100 overlay coords)
-const WAYPOINTS = [
-  { id: 1,  name: "Bag End, The Shire",          distance: 0,    segment: 0,   x: 35.09, y: 26.91, terrain:"flat",     description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
-  { id: 2,  name: "Bucklebury Ferry",           distance: 28,   segment: 28,  x: 39.00, y: 28.40, terrain:"flat",     description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
-  { id: 3,  name: "Bree",                       distance: 165,  segment: 137, x: 42.54, y: 26.77, terrain:"flat",     description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
-  { id: 4,  name: "Weathertop",                 distance: 280,  segment: 115, x: 45.51, y: 27.59, terrain:"hills",    description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
-  { id: 5,  name: "Ford of Bruinen",            distance: 440,  segment: 160, x: 49.97, y: 26.95, terrain:"hills",    description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
-  { id: 6,  name: "Rivendell",                  distance: 458,  segment: 18,  x: 50.95, y: 25.88, terrain:"valley",   description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
-  { id: 7,  name: "Hollin Gate",                distance: 680,  segment: 222, x: 49.52, y: 33.14, terrain:"hills",    description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
-  { id: 8,  name: "Moria",                      distance: 850,  segment: 170, x: 51.92, y: 35.12, terrain:"mountain", description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
-  { id: 9,  name: "Lothlórien",                 distance: 1020, segment: 170, x: 54.98, y: 37.40, terrain:"flat",     description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
-  { id: 10, name: "Amon Hen",                   distance: 1260, segment: 240, x: 58.54, y: 49.94, terrain:"hills",    description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
-  { id: 11, name: "Emyn Muil",                  distance: 1380, segment: 120, x: 60.56, y: 48.34, terrain:"mountain", description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
-  { id: 12, name: "Dead Marshes",               distance: 1540, segment: 160, x: 62.47, y: 50.09, terrain:"marsh",    description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
-  { id: 13, name: "Black Gate",                 distance: 1720, segment: 180, x: 66.88, y: 52.41, terrain:"flat",     description: "The great gate of Mordor", lore: "The mighty gateway to Mordor. Too well guarded for passage." },
-  { id: 14, name: "Ithilien",                   distance: 1870, segment: 150, x: 64.29, y: 63.4, terrain:"hills",    description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
-  { id: 15, name: "Osgiliath",               distance: 1980, segment: 110, x: 63.92, y: 60.68, terrain:"hills", description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
-  { id: 16, name: "Minas Morgul",      distance: 2060, segment: 80,  x: 64.44, y: 62.14, terrain:"valley", description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
-  { id: 17, name: "Cirith Ungol",                distance: 2120, segment: 60,  x: 66.01, y: 62.05, terrain:"mountain",   description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
-  { id: 18, name: "Tower of Cirith Ungol",           distance: 2150, segment: 30, x: 66.92, y: 60.77, terrain:"mountain", description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
-  { id: 19, name: "Plains of Gorgoroth",                 distance: 2550, segment: 400, x: 70.46, y: 61.78, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade." },
-  { id: 20, name: "Mount Doom",                 distance: 2863, segment: 313, x: 70.49, y: 57.72, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade." },
+ const WAYPOINTS = [
+  { id: 1,  name: "Bag End, The Shire",          distance: 0,    segment: 0,   x: 35.09, y: 26.91, terrain:"flat",     description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton.", reward: "🏠" },
+  { id: 2,  name: "Bucklebury Ferry",           distance: 28,   segment: 28,  x: 39.00, y: 28.40, terrain:"flat",     description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire.", reward: "⛴️" },
+  { id: 3,  name: "Bree",                       distance: 165,  segment: 137, x: 42.54, y: 26.77, terrain:"flat",     description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider.", reward: "🍺" },
+  { id: 4,  name: "Weathertop",                 distance: 280,  segment: 115, x: 45.51, y: 27.59, terrain:"hills",    description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king.", reward: "⚔️" },
+  { id: 5,  name: "Ford of Bruinen",            distance: 440,  segment: 160, x: 49.97, y: 26.95, terrain:"hills",    description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood.", reward: "🌊" },
+  { id: 6,  name: "Rivendell",                  distance: 458,  segment: 18,  x: 50.95, y: 25.88, terrain:"valley",   description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided.", reward: "✨" },
+  { id: 7,  name: "Hollin Gate",                distance: 680,  segment: 222, x: 49.52, y: 33.14, terrain:"hills",    description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged.", reward: "🚪" },
+  { id: 8,  name: "Moria",                      distance: 850,  segment: 170, x: 51.92, y: 35.12, terrain:"mountain", description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog.", reward: "⛏️" },
+  { id: 9,  name: "Lothlórien",                 distance: 1020, segment: 170, x: 54.98, y: 37.40, terrain:"flat",     description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently.", reward: "🌳" },
+  { id: 10, name: "Amon Hen",                   distance: 1260, segment: 240, x: 58.54, y: 49.94, terrain:"hills",    description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase.", reward: "👁️" },
+  { id: 11, name: "Emyn Muil",                  distance: 1380, segment: 120, x: 60.56, y: 48.34, terrain:"mountain", description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days.", reward: "🗿" },
+  { id: 12, name: "Dead Marshes",               distance: 1540, segment: 160, x: 62.47, y: 50.09, terrain:"marsh",    description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters.", reward: "💀" },
+  { id: 13, name: "Black Gate",                 distance: 1720, segment: 180, x: 66.88, y: 52.41, terrain:"flat",     description: "The great gate of Mordor", lore: "The mighty gateway to Mordor. Too well guarded for passage.", reward: "🚧" },
+  { id: 14, name: "Ithilien",                   distance: 1870, segment: 150, x: 64.29, y: 63.4, terrain:"hills",    description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here.", reward: "🏹" },
+  { id: 15, name: "Osgiliath",               distance: 1980, segment: 110, x: 63.92, y: 60.68, terrain:"hills", description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair.", reward: "🏛️" },
+  { id: 16, name: "Minas Morgul",      distance: 2060, segment: 80,  x: 64.44, y: 62.14, terrain:"valley", description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him.", reward: "👻" },
+  { id: 17, name: "Cirith Ungol",                distance: 2120, segment: 60,  x: 66.01, y: 62.05, terrain:"mountain",   description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley.", reward: "🕷️" },
+  { id: 18, name: "Tower of Cirith Ungol",           distance: 2150, segment: 30, x: 66.92, y: 60.77, terrain:"mountain", description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom.", reward: "🗼" },
+  { id: 19, name: "Plains of Gorgoroth",                 distance: 2550, segment: 400, x: 70.46, y: 61.78, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade.", reward: "☠️" },
+  { id: 20, name: "Mount Doom",                 distance: 2863, segment: 313, x: 70.49, y: 57.72, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade.", reward: "🌋" }
 ];
 
 /***********************
@@ -843,8 +1052,10 @@ const WAYPOINTS = [
  ***********************/
 let entries = [];              // {id, date(YYYY-MM-DD), distance, note}
 let calibrationMode = false;
+let dailyGoal = DEFAULT_DAILY_GOAL;
+let previousWaypointsReached = new Set(); // Track waypoints for toast notifications
 
-// pan/zoom state
+  // pan/zoom state
 let scale = 1;
 let translateX = 0;
 let translateY = 0;
@@ -875,6 +1086,7 @@ const dom = {
   pctComplete: document.getElementById("pctComplete"),
   kmRemaining: document.getElementById("kmRemaining"),
   progressFill: document.getElementById("progressFill"),
+  dateInput: document.getElementById("dateInput"),
 
   // Map
   mapViewport: document.getElementById("map-viewport"),
@@ -925,6 +1137,22 @@ const dom = {
   wpTerrain: document.getElementById("wpTerrain"),
   wpLore: document.getElementById("wpLore"),
   wpClose: document.getElementById("wpClose"),
+  wpUnlocked: document.getElementById("wpUnlocked")
+
+  // Daily Goal:
+  dailyGoalCard: document.getElementById("dailyGoalCard"),
+  goalStatus: document.getElementById("goalStatus"),
+  goalBarFill: document.getElementById("goalBarFill"),
+  goalProgressText: document.getElementById("goalProgressText"),
+  goalInput: document.getElementById("goalInput"),
+  setGoalBtn: document.getElementById("setGoalBtn"),
+  
+  // Achievements:
+  achievementsSummary: document.getElementById("achievementsSummary"),
+  achievementGrid: document.getElementById("achievementGrid"),
+
+  // Toast:
+  toastContainer: document.getElementById("toastContainer")
 };
 
 /***********************
@@ -935,13 +1163,23 @@ function init() {
   if (dom.mapImage && MAP_IMAGE_SRC) dom.mapImage.src = MAP_IMAGE_SRC;
 
   loadEntries();
+  loadDailyGoal();
   wireTabs();
   wireLog();
   wireModal();
   wireCalibration();
   wireMapPanZoom();
+  wireGoal();
 
   if (dom.totalDistanceLabel) dom.totalDistanceLabel.textContent = `${TOTAL_DISTANCE.toLocaleString()}`;
+  
+  // Set date input to today
+  if (dom.dateInput) {
+    dom.dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+
+  // Initialize tracking for waypoint notifications
+  updatePreviousWaypointsReached();
 
   // Render after image loads so calibration math is correct
   if (dom.mapImage && dom.mapImage.complete && dom.mapImage.naturalWidth > 0) {
@@ -955,12 +1193,6 @@ function init() {
   } else {
     renderAll();
   }
-}
-
-function renderAll() {
-  renderRoutePaths();
-  renderWaypoints();
-  updateUI();
 }
 
 /***********************
@@ -1278,26 +1510,79 @@ function wireLog() {
 }
 
 function addEntry() {
+  function addEntry() {
   const d = parseFloat(dom.distanceInput?.value || "");
   if (!Number.isFinite(d) || d <= 0) {
     alert("Please enter a valid distance.");
     return;
   }
   const note = (dom.noteInput?.value || "").trim();
+  const date = dom.dateInput?.value || new Date().toISOString().slice(0, 10);
 
-  const entry = {
-    id: Date.now(),
-    date: new Date().toISOString().slice(0, 10),
-    distance: d,
-    note
-  };
-
-  entries.push(entry);
+  // Check if entry for this date already exists
+  const existingIndex = entries.findIndex(e => e.date === date);
+  
+  if (existingIndex >= 0) {
+    // Merge with existing entry for same date
+    const confirmation = confirm(`You already logged ${entries[existingIndex].distance} km on ${date}. Add ${d} km to this date's total?`);
+    if (confirmation) {
+      entries[existingIndex].distance = Number(entries[existingIndex].distance) + d;
+      if (note) {
+        entries[existingIndex].note = entries[existingIndex].note 
+          ? `${entries[existingIndex].note}; ${note}` 
+          : note;
+      }
+    } else {
+      return;
+    }
+  } else {
+    // Create new entry
+    const entry = {
+      id: Date.now(),
+      date: date,
+      distance: d,
+      note
+    };
+    entries.push(entry);
+  }
+  
   // Keep chronological for streak functions
   entries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   saveEntries();
 
+  if (dom.distanceInput) dom.distanceInput.value = "";
+  if (dom.noteInput) dom.noteInput.value = "";
+  
+  // Check for new waypoints reached and show toasts
+  checkNewWaypointsReached();
+
+  renderAll();
+  
+  // Reset date to today after successful entry
+  if (dom.dateInput) {
+    dom.dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+}
+
+  saveEntries();
+function loadDailyGoal() {
+  try {
+    const saved = localStorage.getItem(GOAL_STORAGE_KEY);
+    if (saved) {
+      const parsed = parseFloat(saved);
+      if (Number.isFinite(parsed) && parsed > 0) {
+        dailyGoal = parsed;
+      }
+    }
+  } catch {
+    dailyGoal = DEFAULT_DAILY_GOAL;
+  }
+}
+
+function saveDailyGoal() {
+  localStorage.setItem(GOAL_STORAGE_KEY, String(dailyGoal));
+}
   if (dom.distanceInput) dom.distanceInput.value = "";
   if (dom.noteInput) dom.noteInput.value = "";
 
@@ -1388,13 +1673,23 @@ function wireModal() {
   });
 }
 
-function openWaypointModal(w) {
+ffunction openWaypointModal(w) {
   if (!dom.wpModalBackdrop) return;
 
   if (dom.wpTitle) dom.wpTitle.textContent = w.name;
   if (dom.wpDist) dom.wpDist.textContent = `${w.distance} km`;
   if (dom.wpTerrain) dom.wpTerrain.textContent = (TERRAIN_SUGGESTIONS[w.terrain]?.activity || w.terrain || "—");
   if (dom.wpLore) dom.wpLore.textContent = w.lore || "—";
+  
+  // Show unlocked badge if reached
+  const tw = totalWalked();
+  if (dom.wpUnlocked) {
+    if (tw >= w.distance) {
+      dom.wpUnlocked.style.display = "block";
+    } else {
+      dom.wpUnlocked.style.display = "none";
+    }
+  }
 
   dom.wpModalBackdrop.classList.add("active");
 }
@@ -1637,7 +1932,136 @@ function currentStreak(arr) {
 
   return streak;
 }
+/***********************
+ * GAMIFICATION HELPERS
+ ***********************/
 
+// Daily goal functions
+function wireGoal() {
+  if (!dom.setGoalBtn || !dom.goalInput) return;
+  
+  dom.setGoalBtn.addEventListener("click", () => {
+    const val = parseFloat(dom.goalInput.value || "");
+    if (Number.isFinite(val) && val > 0) {
+      dailyGoal = val;
+      saveDailyGoal();
+      renderDailyGoal();
+      showToast("🎯 Daily goal updated!", `New goal: ${val} km`);
+    } else {
+      alert("Please enter a valid goal.");
+    }
+  });
+  
+  // Set input to current goal
+  if (dom.goalInput) {
+    dom.goalInput.value = String(dailyGoal);
+  }
+}
+
+function getTodayDistance() {
+  const today = new Date().toISOString().slice(0, 10);
+  const todayEntries = entries.filter(e => e.date === today);
+  return todayEntries.reduce((sum, e) => sum + (Number(e.distance) || 0), 0);
+}
+
+function renderDailyGoal() {
+  if (!dom.goalBarFill || !dom.goalProgressText || !dom.goalStatus) return;
+  
+  const todayDist = getTodayDistance();
+  const pct = Math.min(100, (todayDist / dailyGoal) * 100);
+  
+  dom.goalBarFill.style.width = `${pct}%`;
+  dom.goalProgressText.textContent = `${todayDist.toFixed(1)} / ${dailyGoal.toFixed(1)} km`;
+  
+  if (todayDist >= dailyGoal) {
+    dom.goalStatus.textContent = "✅ Goal reached!";
+  } else {
+    const remaining = dailyGoal - todayDist;
+    dom.goalStatus.textContent = `${remaining.toFixed(1)} km to go`;
+  }
+}
+
+// Achievement definitions
+const ACHIEVEMENTS = [
+  {
+    id: "first_walk",
+    name: "First Steps",
+    desc: "Log your first walk",
+    icon: "👣",
+    check: () => entries.length > 0
+  },
+  {
+    id: "streak_7",
+    name: "Week Warrior",
+    desc: "Maintain a 7-day streak",
+    icon: "🔥",
+    check: () => currentStreak(entries) >= 7
+  },
+  {
+    id: "entries_10",
+    name: "Dedicated Walker",
+    desc: "Log 10 walks",
+    icon: "📝",
+    check: () => entries.length >= 10
+  },
+  {
+    id: "total_100",
+    name: "Century",
+    desc: "Walk 100 km total",
+    icon: "💯",
+    check: () => totalWalked() >= 100
+  },
+  {
+    id: "total_500",
+    name: "Long Distance",
+    desc: "Walk 500 km total",
+    icon: "🦵",
+    check: () => totalWalked() >= 500
+  },
+  {
+    id: "total_1000",
+    name: "Millennium Walker",
+    desc: "Walk 1000 km total",
+    icon: "🌟",
+    check: () => totalWalked() >= 1000
+  },
+  {
+    id: "reach_rivendell",
+    name: "Refuge Found",
+    desc: "Reach Rivendell",
+    icon: "✨",
+    check: () => totalWalked() >= 458
+  },
+  {
+    id: "reach_moria",
+    name: "Deep Delver",
+    desc: "Reach Moria",
+    icon: "⛏️",
+    check: () => totalWalked() >= 850
+  },
+  {
+    id: "reach_lothlorien",
+    name: "Golden Wood",
+    desc: "Reach Lothlórien",
+    icon: "🌳",
+    check: () => totalWalked() >= 1020
+  },
+  {
+    id: "reach_mordor",
+    name: "Into Darkness",
+    desc: "Enter Mordor",
+    icon: "👁️",
+    check: () => totalWalked() >= 2150
+  },
+  {
+    id: "reach_doom",
+    name: "Ring Bearer",
+    desc: "Reach Mount Doom",
+    icon: "🌋",
+    check: () => totalWalked() >= 2863
+  },
+  {
+    id: "daily_goal_
 /***********************
  * UTILS
  ***********************/
