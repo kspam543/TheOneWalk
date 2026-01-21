@@ -789,298 +789,209 @@
     </div>
   </div>
 
-  <script>
-    /***********************
-     * CONFIG + DATA
-     ***********************/
-    const MAP_IMAGE_SRC = "middle-earth-map.jpg";
+<script>
 
-    // Frodo timeline
-    const TOTAL_DISTANCE = 2863;
-    const FRODO_TIMELINE_DAYS = 55;
-    const FRODO_DAILY_PACE = TOTAL_DISTANCE / FRODO_TIMELINE_DAYS;
+/***********************
+ * CONFIG + DATA
+ ***********************/
+const MAP_IMAGE_SRC = "middle-earth-map.jpg";
 
-    const TERRAIN_SUGGESTIONS = {
-      flat:     { icon: "🚶", activity: "Regular walking",  tip: "Maintain a steady, comfortable pace" },
-      hills:    { icon: "⛰️", activity: "Hill training",     tip: "Find local hills or use incline on a treadmill" },
-      mountain: { icon: "🏔️", activity: "Stair climbing",    tip: "Use stairs, stadium steps, or a StairMaster" },
-      valley:   { icon: "🌲", activity: "Trail walking",     tip: "Walk on uneven terrain or nature trails" },
-      marsh:    { icon: "💧", activity: "Resistance training", tip: "Sand/water walking, or light ankle weights" },
-      volcanic: { icon: "🌋", activity: "HIIT intervals",     tip: "Intervals with walking recovery" }
-    };
+// Frodo timeline
+const TOTAL_DISTANCE = 2863;
+const FRODO_TIMELINE_DAYS = 55;
+const FRODO_DAILY_PACE = TOTAL_DISTANCE / FRODO_TIMELINE_DAYS;
 
-    // Your calibrated WAYPOINTS (keep editing x/y as you calibrate)
-    const WAYPOINTS = [
-      { id: 1,  name: "Bag End, The Shire",          distance: 0,    segment: 0,   x: 35.09, y: 26.91, terrain:"flat",     description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
-      { id: 2,  name: "Bucklebury Ferry",           distance: 28,   segment: 28,  x: 20.00, y: 29.00, terrain:"flat",     description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
-      { id: 3,  name: "Bree",                       distance: 165,  segment: 137, x: 26.00, y: 34.00, terrain:"flat",     description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
-      { id: 4,  name: "Weathertop",                 distance: 280,  segment: 115, x: 32.00, y: 32.00, terrain:"hills",    description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
-      { id: 5,  name: "Ford of Bruinen",            distance: 440,  segment: 160, x: 38.00, y: 29.00, terrain:"hills",    description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
-      { id: 6,  name: "Rivendell",                  distance: 458,  segment: 18,  x: 50.95, y: 25.88, terrain:"valley",   description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
-      { id: 7,  name: "Hollin Gate",                distance: 680,  segment: 222, x: 45.00, y: 35.00, terrain:"hills",    description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
-      { id: 8,  name: "Moria",                      distance: 850,  segment: 170, x: 48.00, y: 38.00, terrain:"mountain", description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
-      { id: 9,  name: "Lothlórien",                 distance: 1020, segment: 170, x: 53.00, y: 42.00, terrain:"flat",     description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
-      { id: 10, name: "Amon Hen",                   distance: 1260, segment: 240, x: 53.00, y: 52.00, terrain:"hills",    description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
-      { id: 11, name: "Emyn Muil",                  distance: 1380, segment: 120, x: 56.00, y: 55.00, terrain:"mountain", description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
-      { id: 12, name: "Dead Marshes",               distance: 1540, segment: 160, x: 60.00, y: 57.00, terrain:"marsh",    description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
-      { id: 13, name: "Black Gate",                 distance: 1720, segment: 180, x: 64.00, y: 58.00, terrain:"flat",     description: "The great gate of Mordor", lore: "The mighty gateway to Mordor. Too well guarded for passage." },
-      { id: 14, name: "Ithilien",                   distance: 1870, segment: 150, x: 66.00, y: 63.00, terrain:"hills",    description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
-      { id: 15, name: "Cirith Ungol",               distance: 2120, segment: 250, x: 70.00, y: 68.00, terrain:"mountain", description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
-      { id: 16, name: "Tower of Cirith Ungol",      distance: 2150, segment: 30,  x: 71.00, y: 69.00, terrain:"mountain", description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
-      { id: 17, name: "Morgul Vale",                distance: 2240, segment: 90,  x: 72.00, y: 72.00, terrain:"valley",   description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
-      { id: 18, name: "Gorgoroth Plains",           distance: 2550, segment: 310, x: 77.00, y: 78.00, terrain:"volcanic", description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
-      { id: 19, name: "Mount Doom",                 distance: 2863, segment: 313, x: 70.49, y: 57.72, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade." }
-    ];
+// Local storage key
+const STORAGE_KEY = "frodoJourneyEntries";
 
-    /***********************
-     * STATE
-     ***********************/
-    let entries
-    <script>
-/* =========================
-   CONFIG (easy sizing knobs)
-   ========================= */
-const CONFIG = {
-  TOTAL_DISTANCE: 2863,
-
-  // Route line styling (SVG units in the 0–100 viewBox space)
-  ROUTE_BASE_WIDTH: 0.55,
-  ROUTE_COMPLETED_WIDTH: 0.75,
-  ROUTE_DASH: "2.4 1.4",
-
-  // Waypoint marker sizing
-  WAYPOINT_R: 0.45,
-  WAYPOINT_R_CURRENT: 0.65,
-  WAYPOINT_STROKE: 0.18,
-  WAYPOINT_STROKE_CURRENT: 0.22,
-  WAYPOINT_INNER_R: 0.16,
-
-  // “You are here” marker sizing
-  YOU_RING_R: 1.25,
-  YOU_RING_STROKE: 0.18,
-  YOU_OUTER_R: 0.65,
-  YOU_OUTER_STROKE: 0.18,
-  YOU_INNER_R: 0.38,
-  YOU_ICON_SIZE: 1.6,
-  YOU_LABEL_FONT: 0.8,
-  YOU_LABEL_PAD_X: 1.6,
-  YOU_LABEL_PAD_Y: 0.9,
-  YOU_LABEL_OFFSET_Y: 2.1,
-
-  // Map pan/zoom limits
-  MIN_SCALE: 0.5,
-  MAX_SCALE: 5,
-
-  // Storage key
-  STORAGE_KEY: "frodoJourneyEntries",
+// Terrain suggestions
+const TERRAIN_SUGGESTIONS = {
+  flat:     { icon: "🚶", activity: "Regular walking",       tip: "Maintain a steady, comfortable pace" },
+  hills:    { icon: "⛰️", activity: "Hill training",          tip: "Find local hills or use incline on a treadmill" },
+  mountain: { icon: "🏔️", activity: "Stair climbing",         tip: "Use stairs, stadium steps, or a StairMaster" },
+  valley:   { icon: "🌲", activity: "Trail walking",          tip: "Walk on uneven terrain or nature trails" },
+  marsh:    { icon: "💧", activity: "Resistance training",    tip: "Sand/water walking, or light ankle weights" },
+  volcanic: { icon: "🌋", activity: "HIIT intervals",         tip: "Intervals with walking recovery" }
 };
 
-/* =========================
-   WAYPOINTS (0–100 coords)
-   ========================= */
+// Your calibrated WAYPOINTS (0–100 overlay coords)
 const WAYPOINTS = [
-  { id: 1, name: "Bag End, The Shire", distance: 0, x: 35.09, y: 26.91, terrain: "flat", description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
-  { id: 2, name: "Bucklebury Ferry", distance: 28, x: 20, y: 29, terrain: "flat", description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
-  { id: 3, name: "Bree", distance: 165, x: 26, y: 34, terrain: "flat", description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
-  { id: 4, name: "Weathertop", distance: 280, x: 32, y: 32, terrain: "hills", description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
-  { id: 5, name: "Ford of Bruinen", distance: 440, x: 38, y: 29, terrain: "hills", description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
-  { id: 6, name: "Rivendell", distance: 458, x: 50.95, y: 25.88, terrain: "valley", description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
-  { id: 7, name: "Hollin Gate", distance: 680, x: 45, y: 35, terrain: "hills", description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
-  { id: 8, name: "Moria", distance: 850, x: 48, y: 38, terrain: "mountain", description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
-  { id: 9, name: "Lothlórien", distance: 1020, x: 53, y: 42, terrain: "flat", description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
-  { id: 10, name: "Amon Hen", distance: 1260, x: 53, y: 52, terrain: "hills", description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
-  { id: 11, name: "Emyn Muil", distance: 1380, x: 56, y: 55, terrain: "mountain", description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
-  { id: 12, name: "Dead Marshes", distance: 1540, x: 60, y: 57, terrain: "marsh", description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
-  { id: 13, name: "Black Gate", distance: 1720, x: 64, y: 58, terrain: "flat", description: "The great gate of Mordor", lore: "The mighty gateway to Mordor, flanked by the Towers of the Teeth. Too well guarded for passage." },
-  { id: 14, name: "Ithilien", distance: 1870, x: 66, y: 63, terrain: "hills", description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
-  { id: 15, name: "Cirith Ungol", distance: 2120, x: 70, y: 68, terrain: "mountain", description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
-  { id: 16, name: "Tower of Cirith Ungol", distance: 2150, x: 71, y: 69, terrain: "mountain", description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
-  { id: 17, name: "Morgul Vale", distance: 2240, x: 72, y: 72, terrain: "valley", description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
-  { id: 18, name: "Gorgoroth Plains", distance: 2550, x: 77, y: 78, terrain: "volcanic", description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
-  { id: 19, name: "Mount Doom", distance: 2863, x: 70.49, y: 57.72, terrain: "volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here in the Cracks of Doom, the Ring must be unmade." }
+  { id: 1,  name: "Bag End, The Shire",          distance: 0,    segment: 0,   x: 35.09, y: 26.91, terrain:"flat",     description: "Green rolling hills, comfortable and peaceful", lore: "Home of Bilbo and Frodo Baggins. Your adventure begins at the round green door of Bag End in Hobbiton." },
+  { id: 2,  name: "Bucklebury Ferry",           distance: 28,   segment: 28,  x: 20.00, y: 29.00, terrain:"flat",     description: "River crossing through gentle farmland", lore: "The hobbits cross the Brandywine River, narrowly escaping the Black Riders pursuing them from the Shire." },
+  { id: 3,  name: "Bree",                       distance: 165,  segment: 137, x: 26.00, y: 34.00, terrain:"flat",     description: "Village at the crossroads", lore: "A village where Men and Hobbits dwell together. Here at The Prancing Pony, Frodo meets the mysterious Strider." },
+  { id: 4,  name: "Weathertop",                 distance: 280,  segment: 115, x: 32.00, y: 32.00, terrain:"hills",    description: "Ancient ruins atop windswept hills", lore: "Ruins of the great watchtower. Here Frodo is wounded by the blade of the Witch-king." },
+  { id: 5,  name: "Ford of Bruinen",            distance: 440,  segment: 160, x: 38.00, y: 29.00, terrain:"hills",    description: "Swift waters at Rivendell's border", lore: "The enchanted river protecting Rivendell. The Nazgûl are swept away by Elrond's flood." },
+  { id: 6,  name: "Rivendell",                  distance: 458,  segment: 18,  x: 50.95, y: 25.88, terrain:"valley",   description: "The Last Homely House", lore: "Imladris, refuge of Elrond. Here the Fellowship is formed and the fate of the Ring is decided." },
+  { id: 7,  name: "Hollin Gate",                distance: 680,  segment: 222, x: 45.00, y: 35.00, terrain:"hills",    description: "Rocky foothills below Misty Mountains", lore: "The ancient elvish realm of Eregion, where the Rings of Power were forged." },
+  { id: 8,  name: "Moria",                      distance: 850,  segment: 170, x: 48.00, y: 38.00, terrain:"mountain", description: "Dark tunnels through mountain depths", lore: "The greatest of Dwarf-cities, now fallen to shadow. Here Gandalf faces the Balrog." },
+  { id: 9,  name: "Lothlórien",                 distance: 1020, segment: 170, x: 53.00, y: 42.00, terrain:"flat",     description: "Golden wood of the Galadhrim", lore: "Realm of Galadriel and Celeborn, where time moves differently." },
+  { id: 10, name: "Amon Hen",                   distance: 1260, segment: 240, x: 53.00, y: 52.00, terrain:"hills",    description: "Hill of Sight above the great river", lore: "The Seat of Seeing. Here the Fellowship is broken and the Three Hunters begin their chase." },
+  { id: 11, name: "Emyn Muil",                  distance: 1380, segment: 120, x: 56.00, y: 55.00, terrain:"mountain", description: "Maze of sharp rocky peaks", lore: "A treacherous labyrinth of stone where Frodo and Sam are lost for days." },
+  { id: 12, name: "Dead Marshes",               distance: 1540, segment: 160, x: 60.00, y: 57.00, terrain:"marsh",    description: "Haunted wetlands", lore: "Ancient battlefield where the last alliance fought Sauron. The dead lie preserved in dark waters." },
+  { id: 13, name: "Black Gate",                 distance: 1720, segment: 180, x: 64.00, y: 58.00, terrain:"flat",     description: "The great gate of Mordor", lore: "The mighty gateway to Mordor. Too well guarded for passage." },
+  { id: 14, name: "Ithilien",                   distance: 1870, segment: 150, x: 66.00, y: 63.00, terrain:"hills",    description: "Fair woodland on Mordor's border", lore: "Once the garden of Gondor. Faramir's rangers ambush Southrons here." },
+  { id: 15, name: "Cirith Ungol",               distance: 2120, segment: 250, x: 70.00, y: 68.00, terrain:"mountain", description: "The high pass guarded by Shelob", lore: "The pass of the spider, where Shelob the Great makes her lair." },
+  { id: 16, name: "Tower of Cirith Ungol",      distance: 2150, segment: 30,  x: 71.00, y: 69.00, terrain:"mountain", description: "Evil fortress at the pass", lore: "Orc-tower watching the pass. Frodo is held prisoner here until Sam rescues him." },
+  { id: 17, name: "Morgul Vale",                distance: 2240, segment: 90,  x: 72.00, y: 72.00, terrain:"valley",   description: "Valley of evil sorcery", lore: "Minas Morgul glows with corpse-light in this cursed valley." },
+  { id: 18, name: "Gorgoroth Plains",           distance: 2550, segment: 310, x: 77.00, y: 78.00, terrain:"volcanic", description: "Ashen wasteland within Mordor", lore: "The desolate plateau of Mordor, filled with orc armies and the smoke of Mount Doom." },
+  { id: 19, name: "Mount Doom",                 distance: 2863, segment: 313, x: 70.49, y: 57.72, terrain:"volcanic", description: "The fires where the Ring was forged", lore: "Orodruin, the Mountain of Fire. Here the Ring must be unmade." }
 ];
 
-const TERRAIN_SUGGESTIONS = {
-  flat: { icon: "🚶", activity: "Regular walking", tip: "Maintain a steady, comfortable pace" },
-  hills: { icon: "⛰️", activity: "Hill training", tip: "Use incline or seek gentle hills" },
-  mountain: { icon: "🏔️", activity: "Stair climbing", tip: "Stairs, step-ups, or StairMaster" },
-  valley: { icon: "🌲", activity: "Trail walking", tip: "Uneven paths or packed gravel trails" },
-  marsh: { icon: "💧", activity: "Resistance training", tip: "Sand walking or light resistance work" },
-  volcanic: { icon: "🌋", activity: "Intervals / HIIT", tip: "Short bursts with walking recovery" },
-};
+/***********************
+ * STATE
+ ***********************/
+let entries = [];              // {id, date(YYYY-MM-DD), distance, note}
+let calibrationMode = false;
 
-const FRODO_TIMELINE_DAYS = 55;
-const FRODO_DAILY_PACE = CONFIG.TOTAL_DISTANCE / FRODO_TIMELINE_DAYS;
-
-/* =========================
-   * STATE
-   ========================= */
-let entries = [];
-let activeTab = "journey";
-
+// pan/zoom state
 let scale = 1;
 let translateX = 0;
 let translateY = 0;
 let isPanning = false;
-let startX = 0;
-let startY = 0;
+let panStartClientX = 0;
+let panStartClientY = 0;
+let panStartTranslateX = 0;
+let panStartTranslateY = 0;
 
-let calibrationMode = false;
-
-/* =========================
-   DOM HOOKS (expects your HTML IDs)
-   ========================= */
-const el = {
-  // Layout / tabs
+/***********************
+ * DOM HOOKS (YOUR IDs)
+ ***********************/
+const dom = {
+  // Tabs
+  tabButtons: Array.from(document.querySelectorAll(".tab-btn")),
   tabJourney: document.getElementById("tab-journey"),
   tabStats: document.getElementById("tab-stats"),
   tabLog: document.getElementById("tab-log"),
-  panelJourney: document.getElementById("panel-journey"),
-  panelStats: document.getElementById("panel-stats"),
-  panelLog: document.getElementById("panel-log"),
 
-  // Map/pan/zoom
-  mapContainer: document.getElementById("map-container"),
+  // Journey overview
+  totalDistanceLabel: document.getElementById("totalDistanceLabel"),
+  currentWaypointName: document.getElementById("currentWaypointName"),
+  currentWaypointDesc: document.getElementById("currentWaypointDesc"),
+  terrainPill: document.getElementById("terrainPill"),
+  terrainTip: document.getElementById("terrainTip"),
+  nextKm: document.getElementById("nextKm"),
+  kmWalked: document.getElementById("kmWalked"),
+  pctComplete: document.getElementById("pctComplete"),
+  kmRemaining: document.getElementById("kmRemaining"),
+  progressFill: document.getElementById("progressFill"),
+
+  // Map
+  mapViewport: document.getElementById("map-viewport"),
   mapWrapper: document.getElementById("map-wrapper"),
   mapImage: document.getElementById("map-image"),
-  overlay: document.getElementById("route-overlay"),
+  routeOverlay: document.getElementById("route-overlay"),
   routeBase: document.getElementById("route-base"),
   routeCompleted: document.getElementById("route-completed"),
   waypointsGroup: document.getElementById("waypoints"),
-  youMarker: document.getElementById("you-marker"),
+  marker: document.getElementById("marker"),
+  markerRing: document.getElementById("marker-ring"),
+  markerOuter: document.getElementById("marker-outer"),
+  markerInner: document.getElementById("marker-inner"),
+  markerEmoji: document.getElementById("marker-emoji"),
 
-  zoomIn: document.getElementById("zoom-in"),
-  zoomOut: document.getElementById("zoom-out"),
-  zoomReset: document.getElementById("zoom-reset"),
+  zoomIn: document.getElementById("zoomIn"),
+  zoomOut: document.getElementById("zoomOut"),
+  zoomReset: document.getElementById("zoomReset"),
 
-  // Journey card
-  currentLocation: document.getElementById("current-location"),
-  locationDesc: document.getElementById("location-desc"),
-  terrainIcon: document.getElementById("terrain-icon"),
-  terrainActivity: document.getElementById("terrain-activity"),
-  terrainTip: document.getElementById("terrain-tip"),
-  nextWaypointKm: document.getElementById("next-waypoint-km"),
-  kmWalked: document.getElementById("km-walked"),
-  pctComplete: document.getElementById("pct-complete"),
-  kmRemaining: document.getElementById("km-remaining"),
-  progressBar: document.getElementById("progress-bar"),
+  // Calibration
+  calibrateBtn: document.getElementById("calibrateBtn"),
 
-  // Log
-  distanceInput: document.getElementById("distance-input"),
-  noteInput: document.getElementById("note-input"),
-  addEntryBtn: document.getElementById("add-entry"),
-  exportBtn: document.getElementById("export-csv"),
-  resetBtn: document.getElementById("reset-journey"),
-  importInput: document.getElementById("import-csv"),
+  // Stats tab
+  statCurrentStreak: document.getElementById("statCurrentStreak"),
+  statLongestStreak: document.getElementById("statLongestStreak"),
+  statAvg7: document.getElementById("statAvg7"),
+  statPaceVs: document.getElementById("statPaceVs"),
+  statPaceVsHint: document.getElementById("statPaceVsHint"),
+  statUserPace: document.getElementById("statUserPace"),
+  statDaysSince: document.getElementById("statDaysSince"),
+  statFrodoPace: document.getElementById("statFrodoPace"),
+  paceNote: document.getElementById("paceNote"),
 
-  // Recent entries list (optional)
-  recentList: document.getElementById("recent-entries"),
+  // Log tab
+  distanceInput: document.getElementById("distanceInput"),
+  noteInput: document.getElementById("noteInput"),
+  addEntryBtn: document.getElementById("addEntryBtn"),
+  csvInput: document.getElementById("csvInput"),
+  exportBtn: document.getElementById("exportBtn"),
+  resetBtn: document.getElementById("resetBtn"),
+  recentCard: document.getElementById("recentCard"),
+  recentList: document.getElementById("recentList"),
 
-  // Stats
-  statCurrentStreak: document.getElementById("stat-current-streak"),
-  statLongestStreak: document.getElementById("stat-longest-streak"),
-  statAvg7: document.getElementById("stat-avg-7"),
-  statPaceVsFrodo: document.getElementById("stat-pace-frodo"),
-  statUserPace: document.getElementById("stat-user-pace"),
-  statFrodoPace: document.getElementById("stat-frodo-pace"),
-  statPaceNote: document.getElementById("stat-pace-note"),
-
-  // Waypoint modal (optional)
-  waypointModal: document.getElementById("waypoint-modal"),
-  modalTitle: document.getElementById("modal-title"),
-  modalDistance: document.getElementById("modal-distance"),
-  modalLore: document.getElementById("modal-lore"),
-  modalClose: document.getElementById("modal-close"),
-
-  // Calibration toggle (optional)
-  calibrateBtn: document.getElementById("calibrate-btn"),
+  // Modal
+  wpModalBackdrop: document.getElementById("wpModalBackdrop"),
+  wpTitle: document.getElementById("wpTitle"),
+  wpDist: document.getElementById("wpDist"),
+  wpTerrain: document.getElementById("wpTerrain"),
+  wpLore: document.getElementById("wpLore"),
+  wpClose: document.getElementById("wpClose"),
 };
 
-/* =========================
-   INIT
-   ========================= */
+/***********************
+ * INIT
+ ***********************/
 function init() {
+  // Ensure map image src matches config (optional)
+  if (dom.mapImage && MAP_IMAGE_SRC) dom.mapImage.src = MAP_IMAGE_SRC;
+
   loadEntries();
-  wireUI();
-  wireMap();
+  wireTabs();
+  wireLog();
+  wireModal();
+  wireCalibration();
+  wireMapPanZoom();
 
-  // Ensure SVG defaults match config (route widths/dash)
-  if (el.routeBase) {
-    el.routeBase.style.strokeWidth = CONFIG.ROUTE_BASE_WIDTH;
-    el.routeBase.style.strokeDasharray = CONFIG.ROUTE_DASH;
-  }
-  if (el.routeCompleted) {
-    el.routeCompleted.style.strokeWidth = CONFIG.ROUTE_COMPLETED_WIDTH;
-  }
+  if (dom.totalDistanceLabel) dom.totalDistanceLabel.textContent = `${TOTAL_DISTANCE.toLocaleString()}`;
 
-  // Render once image is ready
-  if (el.mapImage && el.mapImage.complete && el.mapImage.naturalWidth > 0) {
+  // Render after image loads so calibration math is correct
+  if (dom.mapImage && dom.mapImage.complete && dom.mapImage.naturalWidth > 0) {
     renderAll();
-    centerOnStart();
-  } else if (el.mapImage) {
-    el.mapImage.onload = () => {
+    resetView();
+  } else if (dom.mapImage) {
+    dom.mapImage.addEventListener("load", () => {
       renderAll();
-      centerOnStart();
-    };
+      resetView();
+    });
   } else {
-    // No map image present; still render panels
-    renderPanels();
+    renderAll();
   }
 }
 
 function renderAll() {
-  renderRoute();
+  renderRoutePaths();
   renderWaypoints();
-  updateComputedUI();
-  renderPanels();
+  updateUI();
 }
 
-function renderPanels() {
-  // Only toggles if you have these containers; safe if not.
-  if (el.panelJourney) el.panelJourney.style.display = activeTab === "journey" ? "block" : "none";
-  if (el.panelStats) el.panelStats.style.display = activeTab === "stats" ? "block" : "none";
-  if (el.panelLog) el.panelLog.style.display = activeTab === "log" ? "block" : "none";
-
-  // Tab button styling if present
-  const setActive = (btn, on) => {
-    if (!btn) return;
-    btn.classList.toggle("active", on);
-  };
-  setActive(el.tabJourney, activeTab === "journey");
-  setActive(el.tabStats, activeTab === "stats");
-  setActive(el.tabLog, activeTab === "log");
-}
-
-/* =========================
-   STORAGE
-   ========================= */
+/***********************
+ * STORAGE
+ ***********************/
 function loadEntries() {
   try {
-    const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
-    entries = saved ? JSON.parse(saved) : [];
-    if (!Array.isArray(entries)) entries = [];
+    const saved = localStorage.getItem(STORAGE_KEY);
+    const parsed = saved ? JSON.parse(saved) : [];
+    entries = Array.isArray(parsed) ? parsed : [];
   } catch {
     entries = [];
   }
 }
 
 function saveEntries() {
-  localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(entries));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
 
-/* =========================
-   COMPUTED HELPERS
-   ========================= */
+/***********************
+ * COMPUTED
+ ***********************/
 function totalWalked() {
   return entries.reduce((sum, e) => sum + (Number(e.distance) || 0), 0);
 }
 
-function percentComplete() {
-  return Math.min(100, (totalWalked() / CONFIG.TOTAL_DISTANCE) * 100);
+function pctComplete() {
+  return Math.min(100, (totalWalked() / TOTAL_DISTANCE) * 100);
 }
 
-function remainingKm() {
-  return Math.max(0, CONFIG.TOTAL_DISTANCE - totalWalked());
+function kmRemaining() {
+  return Math.max(0, TOTAL_DISTANCE - totalWalked());
 }
 
 function currentWaypointIndex() {
@@ -1090,8 +1001,7 @@ function currentWaypointIndex() {
 }
 
 function getCurrentWaypoint() {
-  const idx = currentWaypointIndex();
-  return WAYPOINTS[idx] || WAYPOINTS[WAYPOINTS.length - 1];
+  return WAYPOINTS[currentWaypointIndex()] || WAYPOINTS[WAYPOINTS.length - 1];
 }
 
 function getPreviousWaypoint() {
@@ -1099,532 +1009,54 @@ function getPreviousWaypoint() {
   return idx > 0 ? WAYPOINTS[idx - 1] : WAYPOINTS[0];
 }
 
+function getNextWaypointDistance() {
+  const tw = totalWalked();
+  const idx = WAYPOINTS.findIndex(w => w.distance > tw);
+  if (idx === -1) return 0;
+  return Math.max(0, WAYPOINTS[idx].distance - tw);
+}
+
+/* Marker position interpolated between previous and current waypoint */
 function getMarkerPosition() {
   const tw = totalWalked();
   const idx = WAYPOINTS.findIndex(w => w.distance > tw);
 
+  if (idx === -1) {
+    const last = WAYPOINTS[WAYPOINTS.length - 1];
+    return { x: last.x, y: last.y };
+  }
+
   const prev = idx > 0 ? WAYPOINTS[idx - 1] : WAYPOINTS[0];
+  const cur = WAYPOINTS[idx];
 
-  if (idx >= 0 && idx < WAYPOINTS.length) {
-    const cur = WAYPOINTS[idx];
-    const segStart = prev.distance;
-    const segEnd = cur.distance;
-    const t = segEnd === segStart ? 0 : (tw - segStart) / (segEnd - segStart);
-    const clamped = Math.max(0, Math.min(1, t));
-    return {
-      x: prev.x + (cur.x - prev.x) * clamped,
-      y: prev.y + (cur.y - prev.y) * clamped
-    };
-  }
+  const segStart = prev.distance;
+  const segEnd = cur.distance;
 
-  // Completed
-  const last = WAYPOINTS[WAYPOINTS.length - 1];
-  return { x: last.x, y: last.y };
-}
+  const t = segEnd === segStart ? 0 : (tw - segStart) / (segEnd - segStart);
+  const clamped = Math.max(0, Math.min(1, t));
 
-/* =========================
-   ROUTE + WAYPOINT RENDER
-   ========================= */
-function renderRoute() {
-  if (!el.routeBase || !el.routeCompleted) return;
-  const points = WAYPOINTS.map(w => `${w.x},${w.y}`).join(" ");
-  el.routeBase.setAttribute("points", points);
-  el.routeCompleted.setAttribute("points", points);
-
-  // Completed segment via stroke-dasharray
-  const totalLen = calculatePolylineLength(WAYPOINTS);
-  const doneLen = totalLen * (percentComplete() / 100);
-  el.routeCompleted.style.strokeDasharray = `${doneLen} ${totalLen}`;
-}
-
-function renderWaypoints() {
-  if (!el.waypointsGroup) return;
-  el.waypointsGroup.innerHTML = "";
-
-  const tw = totalWalked();
-  const idx = WAYPOINTS.findIndex(w => w.distance > tw);
-
-  WAYPOINTS.forEach((w, i) => {
-    const reached = tw >= w.distance;
-    const current = i === idx;
-
-    const g = svgEl("g", { class: "waypoint" });
-    g.dataset.waypointId = String(w.id);
-
-    const r = current ? CONFIG.WAYPOINT_R_CURRENT : CONFIG.WAYPOINT_R;
-    const sw = current ? CONFIG.WAYPOINT_STROKE_CURRENT : CONFIG.WAYPOINT_STROKE;
-
-    const main = svgEl("circle", {
-      cx: w.x, cy: w.y, r,
-      fill: reached ? "#16a34a" : "#f59e0b",
-      stroke: current ? "#dc2626" : "#78350f",
-      "stroke-width": sw
-    });
-
-    const inner = svgEl("circle", {
-      cx: w.x, cy: w.y,
-      r: CONFIG.WAYPOINT_INNER_R,
-      fill: "#fff", opacity: 0.85
-    });
-
-    g.appendChild(main);
-    g.appendChild(inner);
-
-    // Click -> modal if present
-    g.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openWaypointModal(w);
-    });
-
-    el.waypointsGroup.appendChild(g);
-  });
-
-  // Update “you are here”
-  renderYouMarker();
-}
-
-function renderYouMarker() {
-  if (!el.youMarker) return;
-
-  const { x, y } = getMarkerPosition();
-  el.youMarker.innerHTML = "";
-
-  // Ring
-  el.youMarker.appendChild(svgEl("circle", {
-    cx: x, cy: y,
-    r: CONFIG.YOU_RING_R,
-    fill: "none",
-    stroke: "#dc2626",
-    "stroke-width": CONFIG.YOU_RING_STROKE,
-    opacity: 0.55
-  }));
-
-  // Outer
-  el.youMarker.appendChild(svgEl("circle", {
-    cx: x, cy: y,
-    r: CONFIG.YOU_OUTER_R,
-    fill: "#dc2626",
-    stroke: "#fef3c7",
-    "stroke-width": CONFIG.YOU_OUTER_STROKE
-  }));
-
-  // Inner
-  el.youMarker.appendChild(svgEl("circle", {
-    cx: x, cy: y,
-    r: CONFIG.YOU_INNER_R,
-    fill: "#fef3c7"
-  }));
-
-  // Icon
-  el.youMarker.appendChild(svgEl("text", {
-    x, y: y + (CONFIG.YOU_ICON_SIZE * 1.4),
-    "text-anchor": "middle",
-    "font-size": CONFIG.YOU_ICON_SIZE
-  }, "🧙‍♂️"));
-
-  // Label
-  const labelY = y + CONFIG.YOU_LABEL_OFFSET_Y + (CONFIG.YOU_ICON_SIZE * 1.8);
-  const text = "YOU ARE HERE";
-  const approxTextW = text.length * (CONFIG.YOU_LABEL_FONT * 0.55);
-  const boxW = approxTextW + CONFIG.YOU_LABEL_PAD_X;
-  const boxH = CONFIG.YOU_LABEL_PAD_Y;
-
-  el.youMarker.appendChild(svgEl("rect", {
-    x: x - boxW / 2,
-    y: labelY - boxH / 2,
-    width: boxW,
-    height: boxH,
-    rx: 0.25,
-    fill: "#1e293b",
-    opacity: 0.85
-  }));
-
-  el.youMarker.appendChild(svgEl("text", {
-    x, y: labelY + (CONFIG.YOU_LABEL_FONT * 0.35),
-    "text-anchor": "middle",
-    "font-size": CONFIG.YOU_LABEL_FONT,
-    fill: "#fef3c7",
-    "font-weight": "700"
-  }, text));
-}
-
-/* =========================
-   UI UPDATES (Journey + Stats + Log)
-   ========================= */
-function updateComputedUI() {
-  const tw = totalWalked();
-  const pct = percentComplete();
-  const rem = remainingKm();
-
-  const cur = getCurrentWaypoint();
-  const prev = getPreviousWaypoint();
-  const terrain = TERRAIN_SUGGESTIONS[cur.terrain] || TERRAIN_SUGGESTIONS.flat;
-
-  // Journey panel fields
-  if (el.currentLocation) el.currentLocation.textContent = cur.name;
-  if (el.locationDesc) el.locationDesc.textContent = cur.description;
-
-  if (el.terrainIcon) el.terrainIcon.textContent = terrain.icon;
-  if (el.terrainActivity) el.terrainActivity.textContent = terrain.activity;
-  if (el.terrainTip) el.terrainTip.textContent = `💡 ${terrain.tip}`;
-
-  if (el.nextWaypointKm) {
-    const nextIn = Math.max(0, cur.distance - tw);
-    el.nextWaypointKm.textContent = `${nextIn.toFixed(1)} km`;
-  }
-
-  if (el.kmWalked) el.kmWalked.textContent = tw.toFixed(1);
-  if (el.pctComplete) el.pctComplete.textContent = pct.toFixed(1);
-  if (el.kmRemaining) el.kmRemaining.textContent = rem.toFixed(0);
-
-  if (el.progressBar) el.progressBar.style.width = `${pct}%`;
-
-  // Route completed stroke dash
-  if (el.routeCompleted) {
-    const totalLen = calculatePolylineLength(WAYPOINTS);
-    const doneLen = totalLen * (pct / 100);
-    el.routeCompleted.style.strokeDasharray = `${doneLen} ${totalLen}`;
-  }
-
-  // Stats
-  const streakNow = calculateCurrentStreak(entries);
-  const streakBest = calculateLongestStreak(entries);
-  const avg7 = calculate7DayAverage(entries);
-
-  const pace = calculateUserPace(entries);
-  const paceVs = pace > 0 ? Math.round((pace / FRODO_DAILY_PACE) * 100) : 0;
-
-  if (el.statCurrentStreak) el.statCurrentStreak.textContent = String(streakNow);
-  if (el.statLongestStreak) el.statLongestStreak.textContent = String(streakBest);
-  if (el.statAvg7) el.statAvg7.textContent = avg7.toFixed(1);
-  if (el.statPaceVsFrodo) el.statPaceVsFrodo.textContent = String(paceVs);
-
-  if (el.statUserPace) el.statUserPace.textContent = `${pace.toFixed(1)} km/day`;
-  if (el.statFrodoPace) el.statFrodoPace.textContent = `${FRODO_DAILY_PACE.toFixed(1)} km/day`;
-
-  if (el.statPaceNote) {
-    el.statPaceNote.textContent =
-      pace <= 0
-        ? "Start your first walk to begin comparing your pace to Frodo’s journey."
-        : pace > FRODO_DAILY_PACE
-          ? "You’re walking faster than Frodo’s book pace."
-          : "You’re taking a more relaxed pace than Frodo’s book pace.";
-  }
-
-  // Recent entries list (optional)
-  renderRecentEntries();
-}
-
-function renderRecentEntries() {
-  if (!el.recentList) return;
-  el.recentList.innerHTML = "";
-
-  const recent = entries.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 15);
-  if (recent.length === 0) {
-    el.recentList.innerHTML = `<div class="empty">No entries yet.</div>`;
-    return;
-  }
-
-  recent.forEach(e => {
-    const row = document.createElement("div");
-    row.className = "recent-row";
-    row.innerHTML = `
-      <div class="recent-left">
-        <div class="recent-date">${escapeHtml(e.date)}</div>
-        ${e.note ? `<div class="recent-note">${escapeHtml(e.note)}</div>` : ""}
-      </div>
-      <div class="recent-km">${Number(e.distance).toFixed(1)} km</div>
-    `;
-    el.recentList.appendChild(row);
-  });
-}
-
-/* =========================
-   TAB + BUTTON WIRING
-   ========================= */
-function wireUI() {
-  if (el.tabJourney) el.tabJourney.addEventListener("click", () => { activeTab = "journey"; renderPanels(); });
-  if (el.tabStats) el.tabStats.addEventListener("click", () => { activeTab = "stats"; renderPanels(); });
-  if (el.tabLog) el.tabLog.addEventListener("click", () => { activeTab = "log"; renderPanels(); });
-
-  if (el.addEntryBtn) el.addEntryBtn.addEventListener("click", onAddEntry);
-  if (el.exportBtn) el.exportBtn.addEventListener("click", exportCSV);
-  if (el.resetBtn) el.resetBtn.addEventListener("click", resetJourney);
-
-  if (el.importInput) el.importInput.addEventListener("change", handleCSVImport);
-
-  if (el.modalClose && el.waypointModal) {
-    el.modalClose.addEventListener("click", () => el.waypointModal.classList.remove("active"));
-    el.waypointModal.addEventListener("click", (e) => {
-      if (e.target === el.waypointModal) el.waypointModal.classList.remove("active");
-    });
-  }
-
-  if (el.calibrateBtn) {
-    el.calibrateBtn.addEventListener("click", () => {
-      calibrationMode = !calibrationMode;
-      el.calibrateBtn.textContent = `🎯 Calibration Mode: ${calibrationMode ? "ON" : "OFF"}`;
-      el.calibrateBtn.classList.toggle("on", calibrationMode);
-    });
-  }
-}
-
-/* =========================
-   MAP PAN / ZOOM + CALIBRATION
-   ========================= */
-function wireMap() {
-  if (!el.mapContainer || !el.mapWrapper) return;
-
-  // Mouse pan
-  el.mapContainer.addEventListener("mousedown", startPan);
-  document.addEventListener("mousemove", panMove);
-  document.addEventListener("mouseup", endPan);
-
-  // Touch pan
-  el.mapContainer.addEventListener("touchstart", startPan, { passive: false });
-  document.addEventListener("touchmove", panMove, { passive: false });
-  document.addEventListener("touchend", endPan);
-
-  // Click calibration (reports x/y %)
-  el.mapContainer.addEventListener("click", (e) => {
-    if (!calibrationMode) return;
-
-    // ignore clicks on UI overlays
-    if (e.target.closest(".ui") || e.target.closest(".tabs") || e.target.closest(".controls")) return;
-
-    const { x, y } = getPercentCoordsFromEvent(e);
-    alert(`Waypoint coords:\n  x: ${x}\n  y: ${y}\n\nPaste into WAYPOINTS for that location.`);
-    console.log("Calibration coords:", { x, y });
-  });
-
-  // Zoom controls
-  if (el.zoomIn) el.zoomIn.addEventListener("click", () => zoomBy(1.2));
-  if (el.zoomOut) el.zoomOut.addEventListener("click", () => zoomBy(1 / 1.2));
-  if (el.zoomReset) el.zoomReset.addEventListener("click", () => { scale = 1; centerOnStart(); });
-
-  // Pinch zoom
-  let lastDist = 0;
-  el.mapContainer.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 2) {
-      lastDist = touchDist(e.touches[0], e.touches[1]);
-    }
-  }, { passive: false });
-
-  el.mapContainer.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 2) {
-      e.preventDefault();
-      const d = touchDist(e.touches[0], e.touches[1]);
-      const delta = d - lastDist;
-      if (Math.abs(delta) > 1) {
-        zoomBy(delta > 0 ? 1.04 : 0.96);
-        lastDist = d;
-      }
-    }
-  }, { passive: false });
-}
-
-function startPan(e) {
-  if (e.touches && e.touches.length > 1) return;
-  // don’t pan when clicking waypoint marker (SVG)
-  if (e.target.closest("svg")) return;
-
-  isPanning = true;
-  if (el.mapContainer) el.mapContainer.classList.add("grabbing");
-
-  const p = getClientPoint(e);
-  startX = p.x - translateX;
-  startY = p.y - translateY;
-}
-
-function panMove(e) {
-  if (!isPanning) return;
-  if (e.touches && e.touches.length > 1) return;
-  const p = getClientPoint(e);
-
-  translateX = p.x - startX;
-  translateY = p.y - startY;
-  applyTransform();
-}
-
-function endPan() {
-  isPanning = false;
-  if (el.mapContainer) el.mapContainer.classList.remove("grabbing");
-}
-
-function zoomBy(factor) {
-  const next = Math.max(CONFIG.MIN_SCALE, Math.min(CONFIG.MAX_SCALE, scale * factor));
-  scale = next;
-  applyTransform();
-}
-
-function applyTransform() {
-  el.mapWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-}
-
-function centerOnStart() {
-  if (!el.mapImage || !el.mapContainer) return;
-  const start = WAYPOINTS[0];
-  const container = el.mapContainer.getBoundingClientRect();
-
-  const imgW = el.mapImage.naturalWidth || el.mapImage.width;
-  const imgH = el.mapImage.naturalHeight || el.mapImage.height;
-
-  translateX = container.width / 2 - (imgW * start.x / 100) * scale;
-  translateY = container.height / 2 - (imgH * start.y / 100) * scale;
-
-  applyTransform();
-}
-
-function getPercentCoordsFromEvent(e) {
-  const rect = el.mapImage.getBoundingClientRect();
-  const p = getClientPoint(e);
-
-  const xPx = (p.x - rect.left) / rect.width;
-  const yPx = (p.y - rect.top) / rect.height;
-
-  const x = Math.max(0, Math.min(1, xPx)) * 100;
-  const y = Math.max(0, Math.min(1, yPx)) * 100;
-
-  return { x: +x.toFixed(2), y: +y.toFixed(2) };
-}
-
-function getClientPoint(e) {
-  if (e.touches && e.touches[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  return { x: e.clientX, y: e.clientY };
-}
-
-function touchDist(a, b) {
-  const dx = a.clientX - b.clientX;
-  const dy = a.clientY - b.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-/* =========================
-   WAYPOINT MODAL
-   ========================= */
-function openWaypointModal(w) {
-  if (!el.waypointModal || !el.modalTitle) return;
-  el.modalTitle.textContent = w.name;
-  if (el.modalDistance) el.modalDistance.textContent = `${w.distance} km from The Shire`;
-  if (el.modalLore) el.modalLore.textContent = w.lore || "";
-  el.waypointModal.classList.add("active");
-}
-
-/* =========================
-   ENTRY ACTIONS
-   ========================= */
-function onAddEntry() {
-  const d = parseFloat(el.distanceInput?.value || "");
-  if (!d || d <= 0) {
-    alert("Please enter a valid distance.");
-    return;
-  }
-  const note = (el.noteInput?.value || "").trim();
-
-  const entry = {
-    id: Date.now(),
-    date: new Date().toISOString().split("T")[0],
-    distance: d,
-    note
+  return {
+    x: prev.x + (cur.x - prev.x) * clamped,
+    y: prev.y + (cur.y - prev.y) * clamped,
   };
-
-  entries.push(entry);
-  // Keep entries sorted by date (optional, but helps streak logic)
-  entries.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  saveEntries();
-
-  if (el.distanceInput) el.distanceInput.value = "";
-  if (el.noteInput) el.noteInput.value = "";
-
-  // Re-render
-  renderRoute();
-  renderWaypoints();
-  updateComputedUI();
 }
 
-function resetJourney() {
-  const ok = confirm("Reset journey? This deletes all entries and cannot be undone.");
-  if (!ok) return;
-  entries = [];
-  saveEntries();
-  renderRoute();
-  renderWaypoints();
-  updateComputedUI();
+/***********************
+ * ROUTE RENDER (paths, not points)
+ ***********************/
+function routeD() {
+  if (!WAYPOINTS.length) return "";
+  const first = WAYPOINTS[0];
+  let d = `M ${first.x} ${first.y}`;
+  for (let i = 1; i < WAYPOINTS.length; i++) {
+    d += ` L ${WAYPOINTS[i].x} ${WAYPOINTS[i].y}`;
+  }
+  return d;
 }
 
-function exportCSV() {
-  if (entries.length === 0) return;
-
-  const headers = ["Date", "Distance (km)", "Note"];
-  const lines = [headers.join(",")];
-
-  entries.forEach(e => {
-    const row = [
-      e.date,
-      Number(e.distance || 0),
-      csvEscape(e.note || "")
-    ];
-    lines.push(row.join(","));
-  });
-
-  const blob = new Blob([lines.join("\n")], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `frodo-journey-${new Date().toISOString().split("T")[0]}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function handleCSVImport(evt) {
-  const file = evt.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const text = String(e.target.result || "");
-    const imported = parseCSV(text);
-
-    // expects columns: Date, Distance (km), Note
-    const rows = imported.slice(1); // skip header
-    const next = [];
-
-    rows.forEach(cols => {
-      if (!cols || cols.length < 2) return;
-      const date = (cols[0] || "").trim();
-      const dist = parseFloat((cols[1] || "").trim());
-      const note = (cols[2] || "").trim();
-
-      if (!date || !dist || dist <= 0) return;
-      next.push({
-        id: Date.now() + Math.random(),
-        date,
-        distance: dist,
-        note
-      });
-    });
-
-    entries = entries.concat(next);
-    entries.sort((a, b) => new Date(a.date) - new Date(b.date));
-    saveEntries();
-
-    renderRoute();
-    renderWaypoints();
-    updateComputedUI();
-
-    // reset input so same file can be re-imported if needed
-    evt.target.value = "";
-  };
-  reader.readAsText(file);
-}
-
-/* =========================
-   MATH HELPERS
-   ========================= */
-function calculatePolylineLength(points) {
+/* We approximate total route length by polyline length in 0–100 space.
+   This works well for stroke-dasharray effects, since it matches the viewBox. */
+function polylineLength(points) {
   let len = 0;
   for (let i = 1; i < points.length; i++) {
     const dx = points[i].x - points[i - 1].x;
@@ -1634,87 +1066,585 @@ function calculatePolylineLength(points) {
   return len;
 }
 
-/* =========================
-   STATS HELPERS
-   ========================= */
-function calculate7DayAverage(entriesArr) {
-  if (!entriesArr.length) return 0;
-  const last7 = entriesArr.slice(-7);
-  const sum = last7.reduce((s, e) => s + (Number(e.distance) || 0), 0);
-  return last7.length ? sum / last7.length : 0;
+function renderRoutePaths() {
+  if (!dom.routeBase || !dom.routeCompleted) return;
+
+  const d = routeD();
+  dom.routeBase.setAttribute("d", d);
+  dom.routeCompleted.setAttribute("d", d);
+
+  // Completed route dash
+  const totalLen = polylineLength(WAYPOINTS);
+  const done = totalLen * (pctComplete() / 100);
+
+  // show only "done" length
+  dom.routeCompleted.style.strokeDasharray = `${done} ${totalLen}`;
 }
 
-function calculateUserPace(entriesArr) {
-  if (!entriesArr.length) return 0;
-  const sorted = entriesArr.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+/***********************
+ * WAYPOINTS + MARKER
+ ***********************/
+function renderWaypoints() {
+  if (!dom.waypointsGroup) return;
+
+  dom.waypointsGroup.innerHTML = "";
+  const tw = totalWalked();
+  const idx = WAYPOINTS.findIndex(w => w.distance > tw); // current "next" waypoint index
+
+  WAYPOINTS.forEach((w, i) => {
+    const reached = tw >= w.distance;
+    const current = i === idx;
+
+    const g = svgEl("g", {
+      class: `waypoint wp-hit ${current ? "wp-current" : (reached ? "wp-reached" : "wp-unreached")}`
+    });
+
+    // Outer
+    g.appendChild(svgEl("circle", {
+      class: "wp-outer",
+      cx: w.x,
+      cy: w.y,
+    }));
+
+    // Inner
+    g.appendChild(svgEl("circle", {
+      class: "wp-inner",
+      cx: w.x,
+      cy: w.y,
+    }));
+
+    // Click -> modal
+    g.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openWaypointModal(w);
+    });
+
+    dom.waypointsGroup.appendChild(g);
+  });
+
+  renderMarker();
+}
+
+function renderMarker() {
+  if (!dom.markerRing || !dom.markerOuter || !dom.markerInner || !dom.markerEmoji) return;
+
+  const { x, y } = getMarkerPosition();
+
+  // sizes come from your CSS vars; we set positions and let CSS do sizing
+  dom.markerRing.setAttribute("cx", x);
+  dom.markerRing.setAttribute("cy", y);
+  dom.markerRing.setAttribute("r", getCssNumber("--marker-ring-r", 0.95));
+
+  dom.markerOuter.setAttribute("cx", x);
+  dom.markerOuter.setAttribute("cy", y);
+  dom.markerOuter.setAttribute("r", getCssNumber("--marker-outer-r", 0.55));
+  dom.markerOuter.setAttribute("stroke-width", 0.18);
+
+  dom.markerInner.setAttribute("cx", x);
+  dom.markerInner.setAttribute("cy", y);
+  dom.markerInner.setAttribute("r", getCssNumber("--marker-inner-r", 0.25));
+
+  dom.markerEmoji.setAttribute("x", x);
+  dom.markerEmoji.setAttribute("y", y + (getCssNumber("--marker-emoji-size", 1.3) * 0.35));
+  dom.markerEmoji.setAttribute("font-size", getCssNumber("--marker-emoji-size", 1.3));
+}
+
+/***********************
+ * UI UPDATES
+ ***********************/
+function updateUI() {
+  const tw = totalWalked();
+  const pct = pctComplete();
+  const rem = kmRemaining();
+  const cur = getCurrentWaypoint();
+
+  if (dom.kmWalked) dom.kmWalked.textContent = tw.toFixed(1);
+  if (dom.pctComplete) dom.pctComplete.textContent = `${pct.toFixed(1)}%`;
+  if (dom.kmRemaining) dom.kmRemaining.textContent = rem.toFixed(0);
+  if (dom.progressFill) dom.progressFill.style.width = `${pct}%`;
+
+  if (dom.currentWaypointName) dom.currentWaypointName.textContent = cur.name;
+  if (dom.currentWaypointDesc) dom.currentWaypointDesc.textContent = cur.description;
+
+  const nextIn = getNextWaypointDistance();
+  if (dom.nextKm) dom.nextKm.textContent = nextIn.toFixed(1);
+
+  // terrain pill
+  const t = TERRAIN_SUGGESTIONS[cur.terrain] || TERRAIN_SUGGESTIONS.flat;
+  if (dom.terrainPill) {
+    const emojiSpan = dom.terrainPill.querySelector(".emoji");
+    if (emojiSpan) emojiSpan.textContent = t.icon;
+
+    // update label text inside pill
+    const textSpans = dom.terrainPill.querySelectorAll("span");
+    if (textSpans.length >= 2) textSpans[1].textContent = t.activity;
+  }
+  if (dom.terrainTip) dom.terrainTip.textContent = `💡 ${t.tip}`;
+
+  // Recent list
+  renderRecent();
+
+  // Stats
+  const sNow = currentStreak(entries);
+  const sBest = longestStreak(entries);
+  const avg7 = sevenDayAverage(entries);
+  const pace = userPace(entries);
+  const paceVs = pace > 0 ? Math.round((pace / FRODO_DAILY_PACE) * 100) : 0;
+
+  if (dom.statCurrentStreak) dom.statCurrentStreak.textContent = String(sNow);
+  if (dom.statLongestStreak) dom.statLongestStreak.textContent = String(sBest);
+  if (dom.statAvg7) dom.statAvg7.textContent = avg7.toFixed(1);
+
+  if (dom.statPaceVs) dom.statPaceVs.textContent = `${paceVs}%`;
+  if (dom.statPaceVsHint) dom.statPaceVsHint.textContent = pace > 0 ? "vs Frodo" : "Start walking";
+
+  if (dom.statUserPace) dom.statUserPace.textContent = `${pace.toFixed(1)} km/day`;
+  if (dom.statDaysSince) {
+    const days = daysCovered(entries);
+    dom.statDaysSince.textContent = `Based on ${days} day${days === 1 ? "" : "s"}`;
+  }
+  if (dom.statFrodoPace) dom.statFrodoPace.textContent = `${FRODO_DAILY_PACE.toFixed(1)} km/day`;
+
+  if (dom.paceNote) {
+    dom.paceNote.textContent =
+      pace <= 0
+        ? "🎯 Start your first walk to begin comparing your pace to Frodo’s journey."
+        : pace > FRODO_DAILY_PACE
+          ? "You’re walking faster than Frodo’s book pace."
+          : "You’re taking a more relaxed pace than Frodo’s book pace.";
+  }
+}
+
+function renderRecent() {
+  if (!dom.recentCard || !dom.recentList) return;
+
+  const sorted = entries.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  const recent = sorted.slice(0, 10);
+
+  if (recent.length === 0) {
+    dom.recentCard.style.display = "none";
+    dom.recentList.innerHTML = "";
+    return;
+  }
+
+  dom.recentCard.style.display = "block";
+  dom.recentList.innerHTML = "";
+
+  recent.forEach(e => {
+    const div = document.createElement("div");
+    div.className = "entry";
+    div.innerHTML = `
+      <div>
+        <div class="d">${escapeHtml(e.date)}</div>
+        ${e.note ? `<div class="n">${escapeHtml(e.note)}</div>` : ""}
+      </div>
+      <div class="km">${Number(e.distance).toFixed(1)}</div>
+    `;
+    dom.recentList.appendChild(div);
+  });
+}
+
+/***********************
+ * TABS
+ ***********************/
+function wireTabs() {
+  dom.tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-tab");
+      setActiveTab(target);
+    });
+  });
+}
+
+function setActiveTab(name) {
+  // Buttons
+  dom.tabButtons.forEach(b => b.classList.toggle("active", b.getAttribute("data-tab") === name));
+
+  // Sections
+  if (dom.tabJourney) dom.tabJourney.classList.toggle("active", name === "journey");
+  if (dom.tabStats) dom.tabStats.classList.toggle("active", name === "stats");
+  if (dom.tabLog) dom.tabLog.classList.toggle("active", name === "log");
+}
+
+/***********************
+ * LOG / CSV
+ ***********************/
+function wireLog() {
+  if (dom.addEntryBtn) dom.addEntryBtn.addEventListener("click", addEntry);
+  if (dom.exportBtn) dom.exportBtn.addEventListener("click", exportCSV);
+  if (dom.resetBtn) dom.resetBtn.addEventListener("click", resetJourney);
+  if (dom.csvInput) dom.csvInput.addEventListener("change", importCSV);
+}
+
+function addEntry() {
+  const d = parseFloat(dom.distanceInput?.value || "");
+  if (!Number.isFinite(d) || d <= 0) {
+    alert("Please enter a valid distance.");
+    return;
+  }
+  const note = (dom.noteInput?.value || "").trim();
+
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString().slice(0, 10),
+    distance: d,
+    note
+  };
+
+  entries.push(entry);
+  // Keep chronological for streak functions
+  entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  saveEntries();
+
+  if (dom.distanceInput) dom.distanceInput.value = "";
+  if (dom.noteInput) dom.noteInput.value = "";
+
+  renderAll();
+}
+
+function resetJourney() {
+  const ok = confirm("⟲ Reset Journey?\nThis deletes all entries and cannot be undone.");
+  if (!ok) return;
+  entries = [];
+  saveEntries();
+  renderAll();
+}
+
+function exportCSV() {
+  if (!entries.length) {
+    alert("No entries to export yet.");
+    return;
+  }
+
+  const header = ["Date", "Distance (km)", "Note"];
+  const lines = [header.join(",")];
+
+  entries.forEach(e => {
+    lines.push([
+      e.date,
+      Number(e.distance || 0),
+      csvEscape(e.note || "")
+    ].join(","));
+  });
+
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `one-walk-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importCSV(evt) {
+  const file = evt.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const rows = parseCSV(String(reader.result || ""));
+    if (!rows.length) return;
+
+    // Expect header: Date, Distance (km), Note
+    const data = rows.slice(1);
+    const next = [];
+
+    data.forEach(cols => {
+      if (!cols || cols.length < 2) return;
+      const date = (cols[0] || "").trim();
+      const dist = parseFloat((cols[1] || "").trim());
+      const note = (cols[2] || "").trim();
+
+      if (!date || !Number.isFinite(dist) || dist <= 0) return;
+      next.push({ id: Date.now() + Math.random(), date, distance: dist, note });
+    });
+
+    if (next.length) {
+      entries = entries.concat(next);
+      entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+      saveEntries();
+      renderAll();
+    }
+
+    // allow re-importing same file
+    evt.target.value = "";
+  };
+  reader.readAsText(file);
+}
+
+/***********************
+ * MODAL
+ ***********************/
+function wireModal() {
+  if (!dom.wpModalBackdrop || !dom.wpClose) return;
+
+  dom.wpClose.addEventListener("click", closeWaypointModal);
+  dom.wpModalBackdrop.addEventListener("click", (e) => {
+    if (e.target === dom.wpModalBackdrop) closeWaypointModal();
+  });
+}
+
+function openWaypointModal(w) {
+  if (!dom.wpModalBackdrop) return;
+
+  if (dom.wpTitle) dom.wpTitle.textContent = w.name;
+  if (dom.wpDist) dom.wpDist.textContent = `${w.distance} km`;
+  if (dom.wpTerrain) dom.wpTerrain.textContent = (TERRAIN_SUGGESTIONS[w.terrain]?.activity || w.terrain || "—");
+  if (dom.wpLore) dom.wpLore.textContent = w.lore || "—";
+
+  dom.wpModalBackdrop.classList.add("active");
+}
+
+function closeWaypointModal() {
+  dom.wpModalBackdrop?.classList.remove("active");
+}
+
+/***********************
+ * CALIBRATION MODE
+ ***********************/
+function wireCalibration() {
+  if (!dom.calibrateBtn) return;
+
+  dom.calibrateBtn.addEventListener("click", () => {
+    calibrationMode = !calibrationMode;
+    dom.calibrateBtn.textContent = `🎯 Calibration Mode: ${calibrationMode ? "ON" : "OFF"}`;
+  });
+
+  // Click on map to get coords
+  if (dom.mapViewport) {
+    dom.mapViewport.addEventListener("click", (e) => {
+      if (!calibrationMode) return;
+
+      // ignore clicks on controls
+      if (e.target.closest(".map-controls") || e.target.closest(".tabs")) return;
+
+      const coords = getPercentCoordsFromClick(e);
+      alert(`Waypoint coords:\n  x: ${coords.x}\n  y: ${coords.y}\n\nPaste into your WAYPOINTS array.`);
+      console.log("Calibration coords:", coords);
+    });
+  }
+}
+
+function getPercentCoordsFromClick(e) {
+  if (!dom.mapImage) return { x: 0, y: 0 };
+
+  const rect = dom.mapImage.getBoundingClientRect();
+  const p = getClientPoint(e);
+
+  const xNorm = (p.x - rect.left) / rect.width;
+  const yNorm = (p.y - rect.top) / rect.height;
+
+  const x = Math.max(0, Math.min(1, xNorm)) * 100;
+  const y = Math.max(0, Math.min(1, yNorm)) * 100;
+
+  return { x: +x.toFixed(2), y: +y.toFixed(2) };
+}
+
+/***********************
+ * MAP PAN / ZOOM
+ ***********************/
+function wireMapPanZoom() {
+  if (!dom.mapViewport || !dom.mapWrapper) return;
+
+  // mouse
+  dom.mapViewport.addEventListener("mousedown", onPanStart);
+  window.addEventListener("mousemove", onPanMove);
+  window.addEventListener("mouseup", onPanEnd);
+
+  // touch (single finger pan)
+  dom.mapViewport.addEventListener("touchstart", onPanStart, { passive: false });
+  window.addEventListener("touchmove", onPanMove, { passive: false });
+  window.addEventListener("touchend", onPanEnd);
+
+  // zoom buttons
+  dom.zoomIn?.addEventListener("click", () => zoomBy(1.2));
+  dom.zoomOut?.addEventListener("click", () => zoomBy(1 / 1.2));
+  dom.zoomReset?.addEventListener("click", () => resetView());
+
+  // pinch zoom
+  let lastPinchDist = 0;
+  dom.mapViewport.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 2) lastPinchDist = touchDist(e.touches[0], e.touches[1]);
+  }, { passive: false });
+
+  dom.mapViewport.addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 2) return;
+    e.preventDefault();
+    const d = touchDist(e.touches[0], e.touches[1]);
+    const delta = d - lastPinchDist;
+    if (Math.abs(delta) > 1) {
+      zoomBy(delta > 0 ? 1.04 : 0.96);
+      lastPinchDist = d;
+    }
+  }, { passive: false });
+}
+
+function onPanStart(e) {
+  // ignore when starting on SVG waypoint click targets
+  if (e.target.closest("svg")) return;
+
+  // ignore multi-touch (pinch)
+  if (e.touches && e.touches.length > 1) return;
+
+  isPanning = true;
+  dom.mapViewport.classList.add("grabbing");
+
+  const p = getClientPoint(e);
+  panStartClientX = p.x;
+  panStartClientY = p.y;
+  panStartTranslateX = translateX;
+  panStartTranslateY = translateY;
+}
+
+function onPanMove(e) {
+  if (!isPanning) return;
+  if (e.touches && e.touches.length > 1) return;
+
+  e.preventDefault?.();
+
+  const p = getClientPoint(e);
+  translateX = panStartTranslateX + (p.x - panStartClientX);
+  translateY = panStartTranslateY + (p.y - panStartClientY);
+  applyTransform();
+}
+
+function onPanEnd() {
+  if (!isPanning) return;
+  isPanning = false;
+  dom.mapViewport.classList.remove("grabbing");
+}
+
+function zoomBy(factor) {
+  const next = clamp(scale * factor, 0.5, 5);
+  scale = next;
+  applyTransform();
+}
+
+function resetView() {
+  scale = 1;
+  centerOnWaypoint(WAYPOINTS[0]);
+}
+
+function centerOnWaypoint(wp) {
+  if (!dom.mapImage || !dom.mapViewport) return;
+
+  const viewport = dom.mapViewport.getBoundingClientRect();
+  const imgRect = dom.mapImage.getBoundingClientRect();
+
+  // We want coordinates in *image natural space*, not current rect; use natural dims.
+  const imgW = dom.mapImage.naturalWidth || imgRect.width;
+  const imgH = dom.mapImage.naturalHeight || imgRect.height;
+
+  // target point in image pixels (natural)
+  const targetX = (wp.x / 100) * imgW;
+  const targetY = (wp.y / 100) * imgH;
+
+  // Place target in center of viewport
+  translateX = (viewport.width / 2) - targetX * scale;
+  translateY = (viewport.height / 2) - targetY * scale;
+  applyTransform();
+}
+
+function applyTransform() {
+  if (!dom.mapWrapper) return;
+  dom.mapWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+}
+
+/***********************
+ * STATS HELPERS
+ ***********************/
+function daysCovered(arr) {
+  if (!arr.length) return 0;
+  const sorted = arr.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
   const start = new Date(sorted[0].date);
   const end = new Date(sorted[sorted.length - 1].date);
-
   start.setHours(0,0,0,0);
   end.setHours(0,0,0,0);
+  return Math.max(1, Math.floor((end - start) / (1000*60*60*24)) + 1);
+}
 
-  const days = Math.max(1, Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1);
+function userPace(arr) {
+  if (!arr.length) return 0;
+  const days = daysCovered(arr);
   return totalWalked() / days;
 }
 
-function calculateLongestStreak(entriesArr) {
-  if (!entriesArr.length) return 0;
-  const sorted = entriesArr.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+function sevenDayAverage(arr) {
+  if (!arr.length) return 0;
+  const sorted = arr.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  const last7 = sorted.slice(-7);
+  const sum = last7.reduce((s, e) => s + (Number(e.distance) || 0), 0);
+  return sum / last7.length;
+}
 
-  let longest = 1;
+function longestStreak(arr) {
+  if (!arr.length) return 0;
+  const sorted = arr.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  let best = 1;
   let cur = 1;
 
   for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1].date);
-    const now = new Date(sorted[i].date);
-    prev.setHours(0,0,0,0);
-    now.setHours(0,0,0,0);
-
-    const diff = Math.floor((now - prev) / (1000 * 60 * 60 * 24));
+    const a = new Date(sorted[i-1].date); a.setHours(0,0,0,0);
+    const b = new Date(sorted[i].date);   b.setHours(0,0,0,0);
+    const diff = Math.floor((b - a) / (1000*60*60*24));
     if (diff === 1) {
-      cur++;
-      longest = Math.max(longest, cur);
+      cur += 1;
+      best = Math.max(best, cur);
     } else if (diff > 1) {
       cur = 1;
     }
   }
-  return longest;
+  return best;
 }
 
-function calculateCurrentStreak(entriesArr) {
-  if (!entriesArr.length) return 0;
-  const sorted = entriesArr.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+function currentStreak(arr) {
+  if (!arr.length) return 0;
 
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  // count unique days (avoid double-counting multiple walks on same day)
+  const byDate = new Map();
+  arr.forEach(e => byDate.set(e.date, true));
+  const dates = Array.from(byDate.keys()).sort((a,b) => new Date(b) - new Date(a));
 
+  const today = new Date(); today.setHours(0,0,0,0);
   let streak = 0;
-  let check = new Date(today);
 
-  for (const e of sorted) {
-    const d = new Date(e.date);
-    d.setHours(0,0,0,0);
+  let expected = new Date(today);
+  for (const ds of dates) {
+    const d = new Date(ds); d.setHours(0,0,0,0);
+    const diff = Math.floor((expected - d) / (1000*60*60*24));
 
-    const diff = Math.floor((check - d) / (1000 * 60 * 60 * 24));
-    if (diff === 0 || diff === 1) {
-      streak++;
-      check = new Date(d);
-      check.setDate(check.getDate() - 1);
-    } else {
-      break;
+    // allow streak to include today OR yesterday as the start
+    if (streak === 0 && (diff === 0 || diff === 1)) {
+      streak += 1;
+      expected = new Date(d);
+      expected.setDate(expected.getDate() - 1);
+      continue;
     }
+
+    if (diff === 0) {
+      // same expected day
+      streak += 1;
+      expected.setDate(expected.getDate() - 1);
+      continue;
+    }
+
+    break;
   }
+
   return streak;
 }
 
-/* =========================
-   SVG + CSV + SAFETY UTILS
-   ========================= */
+/***********************
+ * UTILS
+ ***********************/
 function svgEl(tag, attrs = {}, text = null) {
-  const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, String(v)));
-  if (text !== null) n.textContent = text;
-  return n;
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+  if (text !== null) el.textContent = text;
+  return el;
 }
 
 function escapeHtml(str) {
@@ -1725,11 +1655,10 @@ function escapeHtml(str) {
 
 function csvEscape(s) {
   const t = String(s);
-  if (/[,"\n]/.test(t)) return `"${t.replace(/"/g, '""')}"`;
-  return t;
+  return /[,"\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
 }
 
-// Very small CSV parser that respects quoted values
+// tiny CSV parser with quotes
 function parseCSV(text) {
   const rows = [];
   let row = [];
@@ -1750,8 +1679,7 @@ function parseCSV(text) {
       continue;
     }
     if (ch === "," && !inQuotes) {
-      row.push(cur);
-      cur = "";
+      row.push(cur); cur = "";
       continue;
     }
     if ((ch === "\n" || ch === "\r") && !inQuotes) {
@@ -1765,7 +1693,6 @@ function parseCSV(text) {
     cur += ch;
   }
 
-  // flush last cell
   if (cur.length || row.length) {
     row.push(cur);
     rows.push(row);
@@ -1773,9 +1700,30 @@ function parseCSV(text) {
   return rows;
 }
 
-/* =========================
-   BOOT
-   ========================= */
+function clamp(n, a, b) {
+  return Math.max(a, Math.min(b, n));
+}
+
+function getClientPoint(e) {
+  if (e.touches && e.touches[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  return { x: e.clientX, y: e.clientY };
+}
+
+function touchDist(a, b) {
+  const dx = a.clientX - b.clientX;
+  const dy = a.clientY - b.clientY;
+  return Math.sqrt(dx*dx + dy*dy);
+}
+
+function getCssNumber(varName, fallback) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+/***********************
+ * BOOT
+ ***********************/
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
